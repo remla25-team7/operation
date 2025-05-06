@@ -2,7 +2,7 @@
 
 **-- Cristian Comendant: --**
 
-Created PR: 
+Created PR: https://github.com/remla25-team7/operation/pull/1
 
 Approved PR: https://github.com/remla25-team7/app/pull/2
 
