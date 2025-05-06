@@ -4,7 +4,7 @@
 
 Created PR: 
 
-Approved PR: 
+Approved PR: https://github.com/remla25-team7/app/pull/2
 
 **-- Andreea Onofrei: --**
 
