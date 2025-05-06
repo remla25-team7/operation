@@ -1,0 +1,92 @@
+
+
+services:
+  app:
+    image: ${APP_SERVICE_IMAGE}:${APP_SERVICE_VERSION}
+    ports:
+      - "${APP_SERVICE_PORT}:${APP_SERVICE_PORT}"
+    environment:
+      - MODEL_SERVICE_URL=http://model-service:${MODEL_SERVICE_PORT}
+      - APP_VERSION=${APP_SERVICE_VERSION}
+    env_file:
+      - .env
+    volumes:
+      - app-logs:/var/log/app
+    restart: always
+    depends_on:
+      - model-service
+
+  model-service:
+    image: ${MODEL_SERVICE_IMAGE}:${MODEL_SERVICE_VERSION}
+    ports:
+      - "${MODEL_SERVICE_PORT}:${MODEL_SERVICE_PORT}"
+    environment:
+      - MODEL_VERSION=${MODEL_SERVICE_VERSION}
+      - MODEL_URL=https://example.com/models/v1/model.pkl
+      - PORT=5000
+    secrets:
+      - model-credentials
+    volumes:
+      - model-cache:/app/models
+    restart: always
+
+volumes:
+  app-logs:
+  model-cache:
+
+secrets:
+  model-credentials:
+    file: ./secrets/model_credentials.txt
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+services:
+  model-service:
+    image: ghcr.io/remla24-team3/model-service:latest
+    volumes:
+      - ./model:/app/model
+    ports:
+      - 105:105
+
+  app-frontend:
+    image: ghcr.io/remla24-team3/app-frontend:latest
+    ports:
+      - 3000:3000
+    environment:
+      - REACT_APP_SERVICE=http://127.0.0.1:106
+
+  app-service:
+    image: ghcr.io/remla24-team3/app-service:latest
+    ports:
+      - 106:106
+    environment:
+      - MODEL_SERVICE=http://model-service:105
