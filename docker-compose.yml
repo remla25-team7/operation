@@ -1,5 +1,3 @@
-
-
 services:
   app:
     image: ${APP_SERVICE_IMAGE}:${APP_SERVICE_VERSION}
@@ -37,56 +35,3 @@ volumes:
 secrets:
   model-credentials:
     file: ./secrets/model_credentials.txt
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-services:
-  model-service:
-    image: ghcr.io/remla24-team3/model-service:latest
-    volumes:
-      - ./model:/app/model
-    ports:
-      - 105:105
-
-  app-frontend:
-    image: ghcr.io/remla24-team3/app-frontend:latest
-    ports:
-      - 3000:3000
-    environment:
-      - REACT_APP_SERVICE=http://127.0.0.1:106
-
-  app-service:
-    image: ghcr.io/remla24-team3/app-service:latest
-    ports:
-      - 106:106
-    environment:
-      - MODEL_SERVICE=http://model-service:105
