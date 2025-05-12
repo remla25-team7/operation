@@ -68,3 +68,9 @@ Below are presented the main files and directories of the deployment architectur
 - **App**: A Dockerized web application built with HTML/Bootstrap 5 for the frontend and Flask for the backend.
 - **Operation**: Main repository for deployment configurations, featuring Docker Compose for simplified launch and detailed README instruction.
 - 
+
+### Assignment A2
+Commands to run : 1. vagrant up
+2.  ansible-playbook -i inventory.cfg playbooks/ctrl.yml
+3.  ansible-playbook -i inventory.cfg playbooks/node.yml
+In case problems with connection to the nodes: add ansible_ssh_private_key_file=path/to/private_key to the inventory.cfg
