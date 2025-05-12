@@ -1,0 +1,162 @@
+
+- hosts: all
+  become: true
+  tasks:
+    # Register SSH keys
+    - name: Register SSH keys
+      authorized_key:
+        user: vagrant
+        key: "{{ lookup('file', item) }}"
+        state: present
+      with_fileglob:
+        - ../keys/*.pub
+
+    #Disble swap
+    - name: Disable swap for current session
+      shell: swapoff -a
+      when: ansible_swaptotal_mb > 0
+
+    #Remove swap entry from /etc/fstab
+    - name: Remove swap entry from /etc/fstab
+      lineinfile:
+        path: /etc/fstab
+        regexp: '^.*\sswap\s.*$'
+        state: absent
+    
+    # Load kernel modules
+    - name: Load br_netfilter module now
+      modprobe:
+        name: br_netfilter
+        state: present
+
+    - name: Load overlay module now
+      modprobe:
+        name: overlay
+        state: present
+
+    - name: Ensure modules load on boot
+      copy:
+        dest: /etc/modules-load.d/k8s.conf
+        content: |
+          br_netfilter
+          overlay
+        
+    - name: Enable IPv4 packet forwarding (runtime)
+      become: true
+      sysctl:
+        name: net.ipv4.ip_forward
+        value: '1'
+        state: present
+        reload: yes
+
+    - name: Enable bridged traffic to iptables (runtime)
+      become: true
+      sysctl:
+        name: "{{ item }}"
+        value: '1'
+        state: present
+        reload: yes
+      loop:
+        - net.bridge.bridge-nf-call-iptables
+        - net.bridge.bridge-nf-call-ip6tables
+    
+    - name: Update /etc/hosts with cluster hostnames
+      become: true
+      template:
+        src: hosts.j2
+        dest: /etc/hosts
+
+    - name: Add Kubernetes apt GPG key
+      become: true
+      apt_key:
+        url: https://pkgs.k8s.io/core:/stable:/v1.32/deb/Release.key
+        state: present
+
+    - name: Add Kubernetes apt repository
+      become: true
+      apt_repository:
+        repo: deb https://pkgs.k8s.io/core:/stable:/v1.32/deb/ /
+        state: present
+
+    - name: Update apt package cache
+      become: true
+      apt:
+        update_cache: yes
+
+    - name: Install Kubernetes tools
+      become: true
+      apt:
+        name:
+          - kubeadm=1.32.4-1.1
+          - kubelet=1.32.4-1.1
+          - kubectl=1.32.4-1.1
+        state: present
+        allow_downgrade: yes
+
+    - name: Install containerd, runc
+      become: true
+      ansible.builtin.apt:
+        name:
+          - runc
+          - containerd
+        state: present
+
+    - name: Ensure /etc/containerd directory exists
+      ansible.builtin.file:
+        path: /etc/containerd
+        state: directory
+        owner: root
+        group: root
+        mode: '0755'
+
+    - name: Dump default containerd config to /etc/containerd/config.toml
+      ansible.builtin.shell: |
+        containerd config default | tee /etc/containerd/config.toml
+      args:
+        creates: /etc/containerd/config.toml
+
+
+
+    - name: Set SystemdCgroup = true
+      become: true
+      replace:
+        path: /etc/containerd/config.toml
+        regexp: 'SystemdCgroup = false'
+        replace: 'SystemdCgroup = true'
+
+    - name: Set sandbox image to registry.k8s.io/pause:3.10
+      become: true
+      replace:
+        path: /etc/containerd/config.toml
+        regexp: 'sandbox_image = ".*"'
+        replace: 'sandbox_image = "registry.k8s.io/pause:3.10"'
+
+    - name: Set disable_apparmor = true
+      become: true
+      replace:
+        path: /etc/containerd/config.toml
+        regexp: 'disable_apparmor = false'
+        replace: 'disable_apparmor = true'
+
+    - name: Restart containerd
+      become: true
+      systemd:
+        name: containerd
+        state: restarted
+        enabled: true
+
+    - name: Enable and start kubelet
+      become: true
+      systemd:
+        name: kubelet
+        state: started
+        enabled: true
+    
+
+
+
+
+
+
+
+    
