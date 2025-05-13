@@ -11,14 +11,22 @@ services:
     volumes:
       - app-logs:/var/log/app
     restart: always
-#    depends_on:
-#      - model-service
+    depends_on:
+     - model-service
 
-
+  model-service:
+    image: ${MODEL_SERVICE_IMAGE}:${MODEL_SERVICE_VERSION}
+    ports:
+      - "${MODEL_SERVICE_PORT}:${MODEL_SERVICE_PORT}"
+    env_file:
+      - .env
+    volumes:
+      - model-cache:/model-cache
+    restart: always
 
 volumes:
   app-logs:
-#  model-cache:
+  model-cache:
 
 #secrets:
 #  model-credentials:
