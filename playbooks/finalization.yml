@@ -1,0 +1,211 @@
+- name: Install MetalLB
+  hosts: ctrl
+  become: yes
+  vars:
+    metallb_version: "v0.14.9"
+  tasks:
+    - name: Download MetalLB v{{ metallb_version }} manifest
+      get_url:
+        url: https://raw.githubusercontent.com/metallb/metallb/v0.14.9/config/manifests/metallb-native.yaml
+        dest: "/tmp/metallb-native.yaml"
+        mode: '0644'
+      become_user: vagrant
+
+    - name: Apply MetalLB CRDs & core components
+      shell: kubectl apply -f /tmp/metallb-native.yaml
+      become_user: vagrant
+
+    - name: Remove the control-plane NoSchedule taint so MetalLB can schedule
+      shell: |
+        kubectl taint nodes ctrl node-role.kubernetes.io/control-plane:NoSchedule- || true
+      become_user: vagrant
+
+    - name: Remove the master NoSchedule taint (if present)
+      shell: |
+        kubectl taint nodes ctrl node-role.kubernetes.io/master:NoSchedule- || true
+      become_user: vagrant
+
+    - name: Wait for all MetalLB pods to be ready
+      shell: kubectl wait --for=condition=ready pod --all \
+        -n metallb-system --timeout=180s
+      args:
+        executable: /bin/bash
+      become_user: vagrant
+
+    - name: Write MetalLB IPAddressPool manifest
+      copy:
+        dest: /tmp/metallb-pool.yaml
+        mode: '0644'
+        content: |
+          apiVersion: metallb.io/v1beta1
+          kind: IPAddressPool
+          metadata:
+            name: default
+            namespace: metallb-system
+          spec:
+            addresses:
+              - 192.168.56.90-192.168.56.99
+
+    - name: Apply MetalLB IPAddressPool
+      shell: kubectl apply -f /tmp/metallb-pool.yaml
+      become_user: vagrant
+
+    - name: Write MetalLB L2Advertisement manifest
+      copy:
+        dest: /tmp/metallb-l2adv.yaml
+        mode: '0644'
+        content: |
+          apiVersion: metallb.io/v1beta1
+          kind: L2Advertisement
+          metadata:
+            name: default
+            namespace: metallb-system
+          spec:
+            ipAddressPools:
+              - default
+
+    - name: Apply MetalLB L2Advertisement
+      shell: kubectl apply -f /tmp/metallb-l2adv.yaml
+      become_user: vagrant
+
+- name: Install NGINX Ingress Controller
+  hosts: ctrl
+  become: yes
+  vars:
+    ingress_namespace: ingress-nginx
+    ingress_release: ingress-nginx
+    ingress_loadbalancer_ip: "{{ ingress_loadbalancer_ip }}"
+  tasks:
+    - name: Add ingress-nginx Helm repository
+      shell: |
+        helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+        helm repo update
+      args:
+        executable: /bin/bash
+      become_user: vagrant
+
+    - name: Deploy or upgrade NGINX Ingress Controller via Helm
+      shell: |
+        helm upgrade --install {{ ingress_release }} ingress-nginx/ingress-nginx \
+          --namespace {{ ingress_namespace }} --create-namespace \
+          --set controller.service.loadBalancerIP={{ ingress_loadbalancer_ip }} \
+          --wait
+      args:
+        executable: /bin/bash
+      become_user: vagrant
+
+    - name: Verify Ingress Service has an external IP
+      shell: kubectl -n {{ ingress_namespace }} get svc {{ ingress_release }}-controller -o wide
+      register: ingress_svc
+      become_user: vagrant
+
+    - name: Show Ingress Service IP
+      debug:
+        var: ingress_svc.stdout_lines
+
+- name: Install Kubernetes Dashboard
+  hosts: ctrl
+  become: yes
+  vars:
+    dashboard_namespace: kubernetes-dashboard
+    dashboard_release: kubernetes-dashboard
+    ingress_host: dashboard.local
+  tasks:
+    - name: Add kubernetes-dashboard Helm repo
+      shell: |
+        helm repo add kubernetes-dashboard https://kubernetes.github.io/dashboard/
+        helm repo update
+      args:
+        executable: /bin/bash
+      become_user: vagrant
+
+    - name: Install or upgrade Kubernetes Dashboard
+      shell: |
+        helm upgrade --install {{ dashboard_release }} kubernetes-dashboard/kubernetes-dashboard \
+          --namespace {{ dashboard_namespace }} --create-namespace \
+          --wait
+      args:
+        executable: /bin/bash
+      become_user: vagrant
+
+    - name: Write Dashboard admin-user SA & ClusterRoleBinding manifest
+      copy:
+        dest: /tmp/dashboard-adminuser.yaml
+        mode: '0644'
+        content: |
+          apiVersion: v1
+          kind: ServiceAccount
+          metadata:
+            name: admin-user
+            namespace: {{ dashboard_namespace }}
+          ---
+          apiVersion: rbac.authorization.k8s.io/v1
+          kind: ClusterRoleBinding
+          metadata:
+            name: admin-user
+          roleRef:
+            apiGroup: rbac.authorization.k8s.io
+            kind: ClusterRole
+            name: cluster-admin
+          subjects:
+            - kind: ServiceAccount
+              name: admin-user
+              namespace: {{ dashboard_namespace }}
+
+    - name: Apply admin-user SA & ClusterRoleBinding
+      shell: kubectl apply -f /tmp/dashboard-adminuser.yaml
+      become_user: vagrant
+
+    - name: Write Dashboard Ingress manifest
+      copy:
+        dest: /tmp/dashboard-ingress.yaml
+        mode: '0644'
+        content: |
+          apiVersion: networking.k8s.io/v1
+          kind: Ingress
+          metadata:
+            name: kubernetes-dashboard
+            namespace: {{ dashboard_namespace }}
+            annotations:
+              nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+          spec:
+            ingressClassName: nginx
+            rules:
+              - host: {{ ingress_host }}
+                http:
+                  paths:
+                    - path: /
+                      pathType: Prefix
+                      backend:
+                        service:
+                          name: kubernetes-dashboard
+                          port:
+                            number: 443
+
+    - name: Apply Dashboard Ingress
+      shell: kubectl apply -f /tmp/dashboard-ingress.yaml
+      become_user: vagrant
+
+    - name: Point Dashboard Ingress at kubernetes-dashboard-kong-proxy
+      shell: |
+        kubectl -n kubernetes-dashboard patch ingress kubernetes-dashboard \
+          --type=json -p '[{
+            "op": "replace",
+            "path": "/spec/rules/0/http/paths/0/backend/service/name",
+            "value": "kubernetes-dashboard-kong-proxy"
+          }]'
+      become_user: vagrant
+
+    - name: Dashboard setup complete
+      debug:
+        msg: |
+          The Kubernetes Dashboard is installed in namespace "{{ dashboard_namespace }}".
+          To log in, run on the controller VM:
+
+            kubectl -n {{ dashboard_namespace }} create token admin-user
+
+          Then add this entry to your /etc/hosts so you can browse via HTTPS:
+
+            192.168.56.90  {{ ingress_host }}
+
+          Finally, open https://{{ ingress_host }}/ in your browser and paste the token to log in.

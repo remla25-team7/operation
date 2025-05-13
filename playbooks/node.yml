@@ -1,5 +1,5 @@
 - name: Join worker nodes to Kubernetes cluster
-  hosts: node
+  hosts: nodes
   become: yes
   tasks:
     - name: Get join command from controller (delegate to ctrl)
@@ -8,6 +8,11 @@
       delegate_to: ctrl
       changed_when: false
 
-    - name: Join cluster (skip if already joined)
-      command: "{{ join_command.stdout }}"
-      when: "'kubelet' not in ansible_facts.services"
+    - name: Check if the node has already joined
+      stat:
+        path: /etc/kubernetes/kubelet.conf
+      register: kubelet_conf
+
+    - name: Join cluster (only if not already joined)
+      shell: "{{ join_command.stdout }}"
+      when: not kubelet_conf.stat.exists

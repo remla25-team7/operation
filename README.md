@@ -68,3 +68,42 @@ Below are presented the main files and directories of the deployment architectur
 - **App**: A Dockerized web application built with HTML/Bootstrap 5 for the frontend and Flask for the backend.
 - **Operation**: Main repository for deployment configurations, featuring Docker Compose for simplified launch and detailed README instruction.
 - 
+
+### Assignment A2
+
+##### Prerequisites
+- **Vagrant** & **VirtualBox** installed  
+- **Ansible 2.18+** on host (or use the bundled Vagrant provisioner)  
+- Your OS user must be able to edit `/etc/hosts`
+
+##### 1. Clone & Spin Up
+```bash
+git clone <repo-url> && cd <repo-dir>
+vagrant up --provision
+````
+
+This will:
+
+1. Boot **ctrl**, **node-1**, **node-2** VMs
+2. Run Ansible to install Kubernetes, containerd, MetalLB, nginx-ingress, Dashboard
+
+##### 2. Point `dashboard.local` at the LB IP
+
+Add this line to your **host** `/etc/hosts`:
+
+```192.168.56.95   dashboard.local```
+
+##### 3. Browse the Dashboard
+
+Open in your browser:
+
+```https://dashboard.local/ ```
+
+##### 4. Log in as Admin
+Get your token on the control VM
+
+```bash
+vagrant ssh ctrl
+kubectl -n kubernetes-dashboard create token admin-user
+```
+
