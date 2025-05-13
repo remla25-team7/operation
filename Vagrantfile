@@ -12,6 +12,7 @@ Vagrant.configure("2") do |config|
   config.vm.define "ctrl" do |ctrl|
     ctrl.vm.hostname = "ctrl"
     ctrl.vm.network "private_network", ip: CTRL_IP
+    ctrl.vm.network "forwarded_port", guest: 80, host: 8080
     ctrl.vm.provider "virtualbox" do |vb|
       vb.memory = 4096
       vb.cpus = 2
@@ -30,16 +31,38 @@ Vagrant.configure("2") do |config|
     end
   end
 
-  # Shared Ansible provisioner for all machines
-  config.vm.provision "ansible" do |ansible|
-    ansible.playbook = "playbooks/general.yml"
+  # GENERAL (all hosts)
+  config.vm.provision "ansible_general", type: "ansible" do |ansible|
+    ansible.playbook       = "playbooks/general.yml"
     ansible.inventory_path = "inventory.cfg"
-    ansible.extra_vars = {
+    ansible.extra_vars     = {
       num_workers: NUM_WORKERS
     }
   end
 
+  # CTRL (control-plane only)
+  config.vm.provision "ansible_ctrl", type: "ansible" do |ansible|
+    ansible.playbook       = "playbooks/ctrl.yml"
+    ansible.inventory_path = "inventory.cfg"
+    ansible.extra_vars     = {
+      ingress_loadbalancer_ip: "192.168.56.95"
+    }
+  end
 
+  # NODES (worker nodes only)
+  config.vm.provision "ansible_nodes", type: "ansible" do |ansible|
+    ansible.playbook       = "playbooks/node.yml"
+    ansible.inventory_path = "inventory.cfg"
+  end
+
+  # FINALIZE (MetalLB, Ingress, Dashboard)
+  config.vm.provision "ansible_finalize", type: "ansible" do |ansible|
+    ansible.playbook       = "playbooks/finalization.yml"
+    ansible.inventory_path = "inventory.cfg"
+    ansible.extra_vars     = {
+      ingress_loadbalancer_ip: "192.168.56.95"
+    }
+  end
 
   
 end
