@@ -3,7 +3,7 @@ Vagrant.configure("2") do |config|
   config.vm.box = "bento/ubuntu-24.04"
 
   # Variables to control the cluster
-  NUM_WORKERS = 2
+  NUM_WORKERS = 1
   CTRL_IP = "192.168.56.100"
   WORKER_BASE_IP = 101
   SUBNET_PREFIX = "192.168.56."
@@ -12,10 +12,10 @@ Vagrant.configure("2") do |config|
   config.vm.define "ctrl" do |ctrl|
     ctrl.vm.hostname = "ctrl"
     ctrl.vm.network "private_network", ip: CTRL_IP
-    ctrl.vm.network "forwarded_port", guest: 80, host: 8080
+    ctrl.vm.network "forwarded_port", guest: 80, host: 8082
     ctrl.vm.provider "virtualbox" do |vb|
-      vb.memory = 4096
-      vb.cpus = 2
+      vb.memory = 2048
+      vb.cpus = 1
     end
   end
 
@@ -25,8 +25,8 @@ Vagrant.configure("2") do |config|
       node.vm.hostname = "node-#{i}"
       node.vm.network "private_network", ip: "#{SUBNET_PREFIX}#{WORKER_BASE_IP + i - 1}"
       node.vm.provider "virtualbox" do |vb|
-        vb.memory = 6144
-        vb.cpus = 2
+        vb.memory = 2048
+        vb.cpus = 1
       end
     end
   end
