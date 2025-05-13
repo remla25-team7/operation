@@ -26,7 +26,7 @@ Approved PR: https://github.com/remla25-team7/model-training/pull/1
 
 **-- Moegiez Bhatti --**
 
-Created PR: 
+Created PR: https://github.com/remla25-team7/model-service/pull/1
 
 Approved PR: 
 
@@ -45,6 +45,12 @@ Created PR: https://github.com/remla25-team7/operation/pull/7
 
 Approved PR: https://github.com/remla25-team7/operation/pull/8
 
+**-- Moegiez Bhatti --**
+
+Created PR: https://github.com/remla25-team7/operation/pull/9 
+        AND https://github.com/remla25-team7/operation/pull/10
+
+Approved PR: 
 
 **-- Seyidali Bulut --**
 
