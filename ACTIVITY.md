@@ -52,6 +52,7 @@ Created PR: https://github.com/remla25-team7/operation/pull/9
 
 Approved PR:
 https://github.com/remla25-team7/operation/pull/11
+https://github.com/remla25-team7/lib-ml/pull/2
 
 **-- Seyidali Bulut --**
 
