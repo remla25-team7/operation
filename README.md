@@ -70,7 +70,40 @@ Below are presented the main files and directories of the deployment architectur
 - 
 
 ### Assignment A2
-Commands to run : 1. vagrant up
-2.  ansible-playbook -i inventory.cfg playbooks/ctrl.yml
-3.  ansible-playbook -i inventory.cfg playbooks/node.yml
-In case problems with connection to the nodes: add ansible_ssh_private_key_file=path/to/private_key to the inventory.cfg
+
+##### Prerequisites
+- **Vagrant** & **VirtualBox** installed  
+- **Ansible 2.18+** on host (or use the bundled Vagrant provisioner)  
+- Your OS user must be able to edit `/etc/hosts`
+
+##### 1. Clone & Spin Up
+```bash
+git clone <repo-url> && cd <repo-dir>
+vagrant up --provision
+````
+
+This will:
+
+1. Boot **ctrl**, **node-1**, **node-2** VMs
+2. Run Ansible to install Kubernetes, containerd, MetalLB, nginx-ingress, Dashboard
+
+##### 2. Point `dashboard.local` at the LB IP
+
+Add this line to your **host** `/etc/hosts`:
+
+```192.168.56.95   dashboard.local```
+
+##### 3. Browse the Dashboard
+
+Open in your browser:
+
+```https://dashboard.local/ ```
+
+##### 4. Log in as Admin
+Get your token on the control VM
+
+```bash
+vagrant ssh ctrl
+kubectl -n kubernetes-dashboard create token admin-user
+```
+
