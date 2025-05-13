@@ -20,7 +20,9 @@ Approved PR:
 
 **-- Seyidali Bulut --**
 
-Created PR: 
+Pushed commit in dev branch: 18db4754fc1baac0d82f747db4a3af2ca9a51e08
+
+Created PR: https://github.com/remla25-team7/operation/pull/8
 
 Approved PR: 
 
