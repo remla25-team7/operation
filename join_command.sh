@@ -1,0 +1,1 @@
+kubeadm join 10.0.2.15:6443 --token lh7tai.7nt7qpkpuytzmize \

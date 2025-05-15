@@ -1,12 +1,15 @@
 - name: Join worker nodes to Kubernetes cluster
-  hosts: nodes
+  hosts: node-1,node-2
   become: yes
   tasks:
-    - name: Get join command from controller (delegate to ctrl)
-      command: kubeadm token create --print-join-command
-      register: join_command
-      delegate_to: ctrl
-      changed_when: false
+    - name: Load join command from shared file
+      slurp:
+        src: /vagrant/join_command.sh
+      register: join_file
+
+    - name: Set join_command fact
+      set_fact:
+        join_command: "{{ join_file.content | b64decode }}"
 
     - name: Check if the node has already joined
       stat:
@@ -14,5 +17,5 @@
       register: kubelet_conf
 
     - name: Join cluster (only if not already joined)
-      shell: "{{ join_command.stdout }}"
+      shell: "{{ join_command }}"
       when: not kubelet_conf.stat.exists

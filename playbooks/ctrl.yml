@@ -1,6 +1,8 @@
 - name: Set up Kubernetes Controller
   hosts: ctrl
   become: yes
+  vars:
+    kubeinit_out: /vagrant/kubeinit.out
   tasks:
     # Step 13: Initialize the Kubernetes Cluster
     - name: Check if the admin.conf file exists
@@ -8,10 +10,27 @@
         path: /etc/kubernetes/admin.conf
       register: kubeinit
 
-    - name: Initialize the Kubernetes cluster
-      command: kubeadm init --apiserver-advertise-address=192.168.56.100 --pod-network-cidr=10.244.0.0/16 --node-name ctrl
+    - name: Run kubeadm init and save its output
+      shell: |
+        kubeadm init \
+          --apiserver-advertise-address={{ ansible_default_ipv4.address }} \
+          --pod-network-cidr=10.244.0.0/16 \
+          --node-name=ctrl 2>&1 | tee {{ kubeinit_out }}
+      register: init_run
       when: not kubeinit.stat.exists
-      ignore_errors: yes  # Ignore errors to continue execution if already initialized
+      changed_when: init_run.rc == 0
+
+    - name: Extract the join command from init log
+      shell: "grep -A2 'kubeadm join' {{ kubeinit_out }} | head -n1"
+      register: initial_join
+      when: not kubeinit.stat.exists
+
+    - name: Write the signed join command to shared file
+      copy:
+        dest: /vagrant/join_command.sh
+        content: "{{ initial_join.stdout }}"
+        mode: '0755'
+      when: not kubeinit.stat.exists
 
     # Step 14: Setup kubectl for vagrant user
     - name: Create .kube directory for vagrant user
