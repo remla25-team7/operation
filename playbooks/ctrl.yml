@@ -11,26 +11,28 @@
       register: kubeinit
 
     - name: Run kubeadm init and save its output
-      shell: |
-        kubeadm init \
-          --apiserver-advertise-address={{ ansible_default_ipv4.address }} \
-          --pod-network-cidr=10.244.0.0/16 \
-          --node-name=ctrl 2>&1 | tee {{ kubeinit_out }}
-      register: init_run
-      when: not kubeinit.stat.exists
-      changed_when: init_run.rc == 0
+      command: >
+        kubeadm init
+          --apiserver-advertise-address={{ ansible_default_ipv4.address }}
+          --pod-network-cidr=10.244.0.0/16
+      register: kubeinit_out
+      args:
+        creates: /etc/kubernetes/admin.conf
+      become: yes
 
-    - name: Extract the join command from init log
-      shell: "grep -A2 'kubeadm join' {{ kubeinit_out }} | head -n1"
-      register: initial_join
-      when: not kubeinit.stat.exists
+    - name: Generate a fresh kubeadm join command on ctrl
+      command: kubeadm token create --print-join-command
+      register: join_command
+      become: yes
 
-    - name: Write the signed join command to shared file
-      copy:
-        dest: /vagrant/join_command.sh
-        content: "{{ initial_join.stdout }}"
-        mode: '0755'
-      when: not kubeinit.stat.exists
+    - name: Expose join_command for all workers
+      add_host:
+        name: "{{ item }}"
+        groups: kube_workers
+        join_command: "{{ join_command.stdout }}"
+      loop: "{{ lookup('inventory_hostnames','all') 
+              | reject('equalto','ctrl') 
+              | list }}"
 
     # Step 14: Setup kubectl for vagrant user
     - name: Create .kube directory for vagrant user
