@@ -13,26 +13,26 @@
     - name: Run kubeadm init and save its output
       command: >
         kubeadm init
-          --apiserver-advertise-address={{ ansible_default_ipv4.address }}
-          --pod-network-cidr=10.244.0.0/16
+        --apiserver-advertise-address=192.168.56.100
+        --apiserver-cert-extra-sans=192.168.56.100
+        --pod-network-cidr=10.244.0.0/16
       register: kubeinit_out
       args:
         creates: /etc/kubernetes/admin.conf
       become: yes
 
-    - name: Generate a fresh kubeadm join command on ctrl
-      command: kubeadm token create --print-join-command
+
+    - name: Generate a fresh kubeadm join command
+      shell: kubeadm token create --print-join-command --ttl 1h
       register: join_command
       become: yes
 
-    - name: Expose join_command for all workers
-      add_host:
-        name: "{{ item }}"
-        groups: kube_workers
-        join_command: "{{ join_command.stdout }}"
-      loop: "{{ lookup('inventory_hostnames','all') 
-              | reject('equalto','ctrl') 
-              | list }}"
+    - name: Write full join command to shared file (with containerd support)
+      copy:
+        content: "{{ join_command.stdout | trim  }} --cri-socket=unix:///run/containerd/containerd.sock\n"
+        dest: /vagrant/join_command.sh
+        mode: '0755'
+
 
     # Step 14: Setup kubectl for vagrant user
     - name: Create .kube directory for vagrant user

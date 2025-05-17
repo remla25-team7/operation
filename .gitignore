@@ -1,3 +1,4 @@
 secrets/*
 kubeconfig
 .vagrant
+Readme.md
