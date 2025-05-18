@@ -12,8 +12,9 @@
       become_user: vagrant
 
     - name: Apply MetalLB CRDs & core components
-      shell: kubectl apply -f /tmp/metallb-native.yaml
+      shell: kubectl apply --validate=false -f /tmp/metallb-native.yaml
       become_user: vagrant
+
 
     - name: Remove the control-plane NoSchedule taint so MetalLB can schedule
       shell: |

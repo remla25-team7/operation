@@ -1,0 +1,13 @@
+apiVersion: v1
+data:
+  APP_SERVICE_IMAGE: ghcr.io/remla25-team7/app
+  APP_SERVICE_PORT: "5001"
+  APP_SERVICE_VERSION: release
+  MODEL_SERVICE_IMAGE: ghcr.io/remla25-team7/model-service
+  MODEL_SERVICE_PORT: "8080"
+  MODEL_SERVICE_VERSION: latest
+kind: ConfigMap
+metadata:
+  labels:
+    io.kompose.service: app-env
+  name: env

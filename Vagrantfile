@@ -2,6 +2,9 @@ Vagrant.configure("2") do |config|
   # Base box (OS image)
   config.vm.box = "bento/ubuntu-24.04"
 
+  # Mount shared folder into all VMs at /mnt/shared
+  config.vm.synced_folder "./shared", "/mnt/shared", create: true
+
   # Variables to control the cluster
   NUM_WORKERS = 2
   CTRL_IP = "192.168.56.100"
@@ -62,6 +65,4 @@ Vagrant.configure("2") do |config|
       ingress_loadbalancer_ip: "192.168.56.95"
     }
   end
-
-  
 end

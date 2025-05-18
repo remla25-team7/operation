@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: model-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: model-service
+  template:
+    metadata:
+      labels:
+        app: model-service
+    spec:
+      containers:
+      - name: model-service
+        image: ghcr.io/remla25-team7/model-service:latest
+        ports:
+        - containerPort: 8080
+        volumeMounts:
+        - name: model-cache
+          mountPath: /model-cache
+      volumes:
+      - name: model-cache
+        emptyDir: {}
