@@ -139,8 +139,8 @@
       become: yes
 
 
-    # - name: Install Istio control plane
-    #   ansible.builtin.shell: istioctl install --set profile=demo -y
-    #   args:
-    #     creates: /etc/istio
-    #   become_user: vagrant
+    - name: Install Istio control plane
+      ansible.builtin.shell: istioctl install --set profile=demo --skip-confirmation
+      args:
+        creates: /etc/istio
+      become_user: vagrant
