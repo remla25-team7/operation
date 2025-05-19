@@ -144,3 +144,86 @@ kubectl -n kubernetes-dashboard create token admin-user
    ```
 
    This will install Istio without waiting for confirmation.
+
+
+## Deploying the App with Helm
+
+### 1. Navigate to the Helm Chart Directory
+
+```bash
+cd helm/restaurant-sentiment
+```
+
+### 2. Update `values.yaml` with Image Names
+
+```yaml
+app:
+  image: ghcr.io/remla25-team7/app:latest
+  port: 5001
+  host: app.local
+
+modelService:
+  image: ghcr.io/remla25-team7/model-service:latest
+  port: 8080
+  host: model.local
+```
+
+Find image names using:
+
+* `docker images`
+* GitHub Container Registry
+
+### 3. Install the Helm Chart
+
+```bash
+helm install sentiment .
+```
+
+### 4. Check that it Works
+
+```bash
+kubectl get pods
+kubectl get svc
+kubectl get ingress
+```
+
+You should see:
+
+* `app` and `model-service` pods in `Running` status
+* `app.local` and `model.local` routes via Ingress
+
+### 5. Test in Browser or Curl
+
+* App UI: [http://app.local](http://app.local)
+* Model Endpoint:
+
+  ```bash
+  curl -X POST http://model.local/predict \
+    -H "Content-Type: application/json" \
+    -d '{"review": "The food was great!"}'
+  ```
+
+---
+
+## Libraries Used in App/Model
+
+Ensure these are installed in your Docker images:
+
+```text
+flask
+requests
+joblib
+scikit-learn
+prometheus_client   # TODO: expose Prometheus metrics from Flask apps
+```
+
+---
+
+## Assignment 3 To-Dos
+
+* [ ] Add `/metrics` endpoint to both app and model-service using `prometheus_client`
+* [ ] Deploy Prometheus via Helm or K8s manifests
+* [ ] Create a `ServiceMonitor` to scrape the metrics
+* [ ] Deploy Grafana via Helm
+* [ ] Create and load a custom Grafana dashboard
+* [ ] Optional: Configure AlertManager with Prometheus rules
