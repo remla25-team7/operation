@@ -7,17 +7,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-    - host: model.local
-      http:
-        paths:
-          - path: /predict
-            pathType: Prefix
-            backend:
-              service:
-                name: model-service
-                port:
-                  number: 8080
-    - host: app.local
+    - host: {{ .Values.app.host }}
       http:
         paths:
           - path: /
@@ -26,4 +16,14 @@ spec:
               service:
                 name: app
                 port:
-                  number: 5001
+                  number: {{ .Values.app.port }}
+    - host: {{ .Values.modelService.host }}
+      http:
+        paths:
+          - path: /predict
+            pathType: Prefix
+            backend:
+              service:
+                name: model-service
+                port:
+                  number: {{ .Values.modelService.port }}
