@@ -81,3 +81,10 @@ Approved PR: https://github.com/remla25-team7/operation/pull/3
 Created PR: https://github.com/remla25-team7/operation/pull/13
 
 Approved PR: 
+
+**-- Seyidali Bulut --**
+
+
+Created PR: https://github.com/remla25-team7/operation/pull/14
+
+Approved PR: https://github.com/remla25-team7/operation/pull/15
