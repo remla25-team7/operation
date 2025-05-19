@@ -88,3 +88,9 @@ Approved PR:
 Created PR: https://github.com/remla25-team7/operation/pull/14
 
 Approved PR: https://github.com/remla25-team7/operation/pull/15
+
+**-- Andreea Onofrei: --**
+
+Created PR: https://github.com/remla25-team7/operation/pull/15
+
+Approved PR: https://github.com/remla25-team7/operation/pull/16
