@@ -73,3 +73,11 @@ Approved PR: https://github.com/remla25-team7/operation/pull/10
 Created PR: https://github.com/remla25-team7/operation/pull/4
 
 Approved PR: https://github.com/remla25-team7/operation/pull/3
+
+# Assignmenr 3: 
+
+**-- Răzvan Loghin: --**
+
+Created PR: https://github.com/remla25-team7/operation/pull/13
+
+Approved PR: 

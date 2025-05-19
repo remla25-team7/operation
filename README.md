@@ -1,4 +1,3 @@
-````markdown
 # Operation
 
 ## Overview
@@ -28,7 +27,7 @@ This repository serves as the main entry point for the **Sentiment Analysis Syst
    ```bash
    git clone https://github.com/remla25-team7/operation.git
    cd operation
-````
+   ```
 
 2. **Create the `secrets` folder** (if it doesn’t exist)
 
@@ -48,7 +47,7 @@ This repository serves as the main entry point for the **Sentiment Analysis Syst
    docker-compose up -d
    ```
 
----
+
 
 ## Code Structure
 
@@ -129,8 +128,8 @@ Retrieve your token on the control VM:
 vagrant ssh ctrl
 kubectl -n kubernetes-dashboard create token admin-user
 ```
-
-#### 5. Install Istio (Manual)
+### Assignment 3
+#### 1. Install Istio (Manual)
 
 1. SSH into the control VM:
 
