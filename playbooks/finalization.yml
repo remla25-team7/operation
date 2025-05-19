@@ -26,6 +26,14 @@
         kubectl taint nodes ctrl node-role.kubernetes.io/master:NoSchedule- || true
       become_user: vagrant
 
+    - name: Wait until any MetalLB pod shows up
+      shell: kubectl get pods -n metallb-system
+      register: metallb_pods
+      retries: 12
+      delay: 10
+      become_user: vagrant
+      until: metallb_pods.stdout_lines | length > 0
+
     - name: Wait for all MetalLB pods to be ready
       shell: kubectl wait --for=condition=ready pod --all \
         -n metallb-system --timeout=180s
