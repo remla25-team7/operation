@@ -95,6 +95,6 @@ Approved PR: https://github.com/remla25-team7/operation/pull/16
 
 **-- Cristian Comendant: --**
 
-Created PR:
+Created PR: https://github.com/remla25-team7/operation/pull/17
 
 Approved PR: https://github.com/remla25-team7/operation/pull/13
