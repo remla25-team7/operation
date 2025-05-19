@@ -115,3 +115,26 @@
       file:
         path: /tmp/kube-flannel.yml
         state: absent
+    
+    # Step 23: Install Istio
+    - name: Download Istio 1.25.2
+      ansible.builtin.get_url:
+        url: https://github.com/istio/istio/releases/download/1.25.2/istio-1.25.2-linux-arm64.tar.gz
+        dest: /home/vagrant/istio-1.25.2-linux-arm64.tar.gz
+        mode: '0644'
+        force: no
+
+    - name: Unpack Istio archive
+      ansible.builtin.unarchive:
+        src: /home/vagrant/istio-1.25.2-linux-arm64.tar.gz
+        dest: /home/vagrant/
+        remote_src: yes
+
+    - name: Copy istioctl binary to /usr/local/bin
+      ansible.builtin.copy:
+        src: /home/vagrant/istio-1.25.2/bin/istioctl
+        dest: /usr/local/bin/istioctl
+        remote_src: yes
+        mode: '0755'
+      become: yes
+

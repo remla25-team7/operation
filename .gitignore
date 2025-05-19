@@ -2,3 +2,5 @@ secrets/*
 kubeconfig
 .vagrant
 Readme.md
+kubeinit.out
+inventory.cfg
