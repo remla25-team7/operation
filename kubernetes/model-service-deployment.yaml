@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert -o kubernetes/
+    kompose.version: 1.36.0 (HEAD)
+  labels:
+    io.kompose.service: model-service
+  name: model-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: model-service
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert -o kubernetes/
+        kompose.version: 1.36.0 (HEAD)
+      labels:
+        io.kompose.service: model-service
+    spec:
+      containers:
+        - name: model-service
+          image: ghcr.io/remla25-team7/model-service:latest
+          envFrom:
+            - configMapRef:
+                name: env
+          ports:
+            - containerPort: 8080
+              protocol: TCP
+          volumeMounts:
+            - mountPath: /model-cache
+              name: model-cache
+            - mountPath: /models
+              name: shared-vol
+      restartPolicy: Always
+      volumes:
+        - name: model-cache
+          emptyDir: {}
+        - name: shared-vol
+          hostPath:
+            path: /mnt/shared
+            type: DirectoryOrCreate
