@@ -7,3 +7,9 @@ modelService:
   image: ghcr.io/remla25-team7/model-service:latest
   port: 8080
   host: model.local
+
+monitoring:
+  enabled: true
+  scrapeInterval: 15s
+  appRequestRateThreshold: 15
+  appRequestRateDuration: 2m

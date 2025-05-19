@@ -2,7 +2,7 @@
 
 **-- Cristian Comendant: --**
 
-Created PR: https://github.com/remla25-team7/operation/pull/1 
+Created PR: https://github.com/remla25-team7/operation/pull/1
 
 Approved PR: https://github.com/remla25-team7/app/pull/2
 
@@ -22,7 +22,7 @@ Created RR: https://github.com/remla25-team7/model-service/pull/2
 Created PR: https://github.com/remla25-team7/model-service/pull/3
 Created PR: https://github.com/remla25-team7/model-service/pull/4#commits-pushed-e37a277
 
-Approved PR: 
+Approved PR:
 
 **-- Seyidali Bulut --**
 
@@ -34,8 +34,7 @@ Approved PR: https://github.com/remla25-team7/model-training/pull/1
 
 Created PR: https://github.com/remla25-team7/model-service/pull/1
 
-Approved PR: 
-
+Approved PR:
 
 # Assignment 2:
 
@@ -43,7 +42,7 @@ Approved PR:
 
 Created PR: https://github.com/remla25-team7/operation/pull/3
 
-Approved PR: https://github.com/remla25-team7/operation/pull/4 
+Approved PR: https://github.com/remla25-team7/operation/pull/4
 
 **-- Andreea Onofrei: --**
 
@@ -53,8 +52,8 @@ Approved PR: https://github.com/remla25-team7/operation/pull/8
 
 **-- Moegiez Bhatti --**
 
-Created PR: https://github.com/remla25-team7/operation/pull/9 
-        AND https://github.com/remla25-team7/operation/pull/10
+Created PR: https://github.com/remla25-team7/operation/pull/9
+AND https://github.com/remla25-team7/operation/pull/10
 
 Approved PR:
 https://github.com/remla25-team7/operation/pull/11
@@ -74,16 +73,15 @@ Created PR: https://github.com/remla25-team7/operation/pull/4
 
 Approved PR: https://github.com/remla25-team7/operation/pull/3
 
-# Assignmenr 3: 
+# Assignmenr 3:
 
 **-- Răzvan Loghin: --**
 
 Created PR: https://github.com/remla25-team7/operation/pull/13
 
-Approved PR: 
+Approved PR:
 
 **-- Seyidali Bulut --**
-
 
 Created PR: https://github.com/remla25-team7/operation/pull/14
 
@@ -94,3 +92,9 @@ Approved PR: https://github.com/remla25-team7/operation/pull/15
 Created PR: https://github.com/remla25-team7/operation/pull/15
 
 Approved PR: https://github.com/remla25-team7/operation/pull/16
+
+**-- Cristian Comendant: --**
+
+Created PR:
+
+Approved PR: https://github.com/remla25-team7/operation/pull/13
