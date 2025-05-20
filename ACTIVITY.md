@@ -1,4 +1,30 @@
-# Assignment 1:
+# Week 1:
+
+# Week 2: 
+
+# Week 3: 
+-- Razvan Loghin --
+Created PR: https://github.com/remla25-team7/lib-ml/pull/1 (related to A1)
+Created PR: https://github.com/remla25-team7/model-training/pull/3 (related to A1)
+Approved PR: 
+
+# Week 4: 
+-- Razvan Loghin --
+Created PR: https://github.com/remla25-team7/lib-ml/pull/2 (related to A1)
+Created PR: https://github.com/remla25-team7/model-training/pull/4 (related to A1)
+Created PR: https://github.com/remla25-team7/model-service/pull/2 (related to A1)
+Created PR: https://github.com/remla25-team7/model-service/pull/3 (related to A1)
+Created PR: https://github.com/remla25-team7/model-service/pull/4 (related to A1)
+Created PR: https://github.com/remla25-team7/operation/pull/4 (related to A2)
+Approved PR: https://github.com/remla25-team7/operation/pull/3 (related to A2)
+
+# Week 5: 
+-- Razvan Loghin --
+Created PR: https://github.com/remla25-team7/operation/pull/13/commits (related to A3)
+Approved PR: https://github.com/remla25-team7/operation/pull/14 (related to A3)
+
+
+---
 
 **-- Cristian Comendant: --**
 
@@ -12,17 +38,6 @@ Created PR: https://github.com/remla25-team7/app/pull/3
 
 Approved PR: https://github.com/remla25-team7/app/pull/4
 
-**-- Răzvan Loghin: --**
-
-Created PR: https://github.com/remla25-team7/lib-ml/pull/1
-Created PR: https://github.com/remla25-team7/lib-ml/pull/2
-Created PR: https://github.com/remla25-team7/model-training/pull/3
-Created PR: https://github.com/remla25-team7/model-training/pull/4
-Created RR: https://github.com/remla25-team7/model-service/pull/2
-Created PR: https://github.com/remla25-team7/model-service/pull/3
-Created PR: https://github.com/remla25-team7/model-service/pull/4#commits-pushed-e37a277
-
-Approved PR:
 
 **-- Seyidali Bulut --**
 
@@ -67,18 +82,8 @@ Created PR: https://github.com/remla25-team7/operation/pull/8
 
 Approved PR: https://github.com/remla25-team7/operation/pull/10
 
-**-- Răzvan Loghin: --**
-
-Created PR: https://github.com/remla25-team7/operation/pull/4
-
-Approved PR: https://github.com/remla25-team7/operation/pull/3
 
 # Assignmenr 3:
-
-**-- Răzvan Loghin: --**
-
-Created PR: https://github.com/remla25-team7/operation/pull/13
-
 Approved PR:
 
 **-- Seyidali Bulut --**
