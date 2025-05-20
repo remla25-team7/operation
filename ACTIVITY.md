@@ -1,16 +1,15 @@
-# Week 1:
-
 # Week 2: 
+-- Razvan Loghin --
+Created PR: https://github.com/remla25-team7/lib-ml/pull/1 (related to A1)
 
 # Week 3: 
 -- Razvan Loghin --
-Created PR: https://github.com/remla25-team7/lib-ml/pull/1 (related to A1)
+Created PR:  https://github.com/remla25-team7/lib-ml/pull/2 (related to A1)
 Created PR: https://github.com/remla25-team7/model-training/pull/3 (related to A1)
 Approved PR: 
 
 # Week 4: 
 -- Razvan Loghin --
-Created PR: https://github.com/remla25-team7/lib-ml/pull/2 (related to A1)
 Created PR: https://github.com/remla25-team7/model-training/pull/4 (related to A1)
 Created PR: https://github.com/remla25-team7/model-service/pull/2 (related to A1)
 Created PR: https://github.com/remla25-team7/model-service/pull/3 (related to A1)
