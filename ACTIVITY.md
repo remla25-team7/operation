@@ -1,14 +1,25 @@
-# Week 2: 
+# Week 2:
+
 -- Razvan Loghin --
 Created PR: https://github.com/remla25-team7/lib-ml/pull/1 (related to A1)
 
-# Week 3: 
--- Razvan Loghin --
-Created PR:  https://github.com/remla25-team7/lib-ml/pull/2 (related to A1)
-Created PR: https://github.com/remla25-team7/model-training/pull/3 (related to A1)
-Approved PR: 
+-- Cristian Comendant --
+Created PR: https://github.com/remla25-team7/operation/pull/1 (related to A1)
+Approved PR: https://github.com/remla25-team7/app/pull/2 (related to A1)
 
-# Week 4: 
+# Week 3:
+
+-- Razvan Loghin --
+Created PR: https://github.com/remla25-team7/lib-ml/pull/2 (related to A1)
+Created PR: https://github.com/remla25-team7/model-training/pull/3 (related to A1)
+Approved PR:
+
+-- Cristian Comendant --
+Created PR: https://github.com/remla25-team7/operation/pull/3 (related to A2)
+Approved PR: https://github.com/remla25-team7/operation/pull/4 (related to A2)
+
+# Week 4:
+
 -- Razvan Loghin --
 Created PR: https://github.com/remla25-team7/model-training/pull/4 (related to A1)
 Created PR: https://github.com/remla25-team7/model-service/pull/2 (related to A1)
@@ -17,26 +28,28 @@ Created PR: https://github.com/remla25-team7/model-service/pull/4 (related to A1
 Created PR: https://github.com/remla25-team7/operation/pull/4 (related to A2)
 Approved PR: https://github.com/remla25-team7/operation/pull/3 (related to A2)
 
-# Week 5: 
+-- Cristian Comendant --
+
+Created PR: https://github.com/remla25-team7/app/pull/4 (related to A1)
+Approved PR: https://github.com/remla25-team7/model-service/pull/2 (related to A1)
+
+# Week 5:
+
 -- Razvan Loghin --
 Created PR: https://github.com/remla25-team7/operation/pull/13/commits (related to A3)
 Approved PR: https://github.com/remla25-team7/operation/pull/14 (related to A3)
 
+-- Cristian Comendant --
+Created PR: https://github.com/remla25-team7/operation/pull/3 (related to A3)
+Approved PR: https://github.com/remla25-team7/operation/pull/4 (related to A3)
 
 ---
-
-**-- Cristian Comendant: --**
-
-Created PR: https://github.com/remla25-team7/operation/pull/1
-
-Approved PR: https://github.com/remla25-team7/app/pull/2
 
 **-- Andreea Onofrei: --**
 
 Created PR: https://github.com/remla25-team7/app/pull/3
 
 Approved PR: https://github.com/remla25-team7/app/pull/4
-
 
 **-- Seyidali Bulut --**
 
@@ -51,12 +64,6 @@ Created PR: https://github.com/remla25-team7/model-service/pull/1
 Approved PR:
 
 # Assignment 2:
-
-**-- Cristian Comendant: --**
-
-Created PR: https://github.com/remla25-team7/operation/pull/3
-
-Approved PR: https://github.com/remla25-team7/operation/pull/4
 
 **-- Andreea Onofrei: --**
 
@@ -81,8 +88,8 @@ Created PR: https://github.com/remla25-team7/operation/pull/8
 
 Approved PR: https://github.com/remla25-team7/operation/pull/10
 
-
 # Assignmenr 3:
+
 Approved PR:
 
 **-- Seyidali Bulut --**
@@ -100,9 +107,3 @@ Approved PR: https://github.com/remla25-team7/operation/pull/17
 Created PR: https://github.com/remla25-team7/operation/pull/15
 
 Approved PR: https://github.com/remla25-team7/operation/pull/16
-
-**-- Cristian Comendant: --**
-
-Created PR: https://github.com/remla25-team7/operation/pull/17
-
-Approved PR: https://github.com/remla25-team7/operation/pull/13
