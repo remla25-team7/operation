@@ -62,7 +62,7 @@ Approved PR: https://github.com/remla25-team7/operation/pull/10 (related to A2)
 
 -- Razvan Loghin --
 
-Created PR: https://github.com/remla25-team7/operation/pull/13/commits (related to A3) \
+Created PR: https://github.com/remla25-team7/operation/pull/13 (related to A3) \
 Approved PR: https://github.com/remla25-team7/operation/pull/14 (related to A3)
 
 -- Cristian Comendant --
