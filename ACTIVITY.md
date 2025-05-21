@@ -8,6 +8,9 @@ Created main: https://github.com/remla25-team7/lib-ml/commit/6404d6d6022089bf42f
 Created PR: https://github.com/remla25-team7/model-training/pull/2 (related to A1) \
 Approved PR: https://github.com/remla25-team7/model-training/pull/1 (related to A1)
 
+-- Moegiez Bhatti --
+ Created:https://github.com/remla25-team7/model-service/pull/1 (a1)
+Approved:https://github.com/remla25-team7/lib-ml/pull/1 (a1)
 
 # Week 3:
 
@@ -34,8 +37,11 @@ Created PR: https://github.com/remla25-team7/app/pull/3 (related to A1)
 
 Approved PR: https://github.com/remla25-team7/app/pull/4 (related to A1)
 
-
-
+-- Moegiez Bhatti --
+ Created:https://github.com/remla25-team7/operation/pull/9 (a2)
+ Created:https://github.com/remla25-team7/model-service/pull/1 (a2)
+Approved:https://github.com/remla25-team7/operation/pull/10 (a2)
+Approved:https://github.com/remla25-team7/operation/pull/11) (a2)
 # Week 4:
 
 -- Razvan Loghin --
@@ -64,7 +70,9 @@ Created PR: https://github.com/remla25-team7/operation/pull/7 (related to A2) \
 
 Approved PR: https://github.com/remla25-team7/operation/pull/8 (related to A2)
 
-
+-- Moegiez Bhatti --
+ Created:https://github.com/remla25-team7/operation/pull/16 (a3)
+Approved:https://github.com/remla25-team7/operation/pull/17 (a3)
 # Week 5:
 
 -- Razvan Loghin --
