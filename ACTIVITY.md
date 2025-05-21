@@ -8,7 +8,7 @@ Created PR: https://github.com/remla25-team7/operation/pull/1 (related to A1)
 Approved PR: https://github.com/remla25-team7/app/pull/2 (related to A1)
 
 -- Seyidali Bulut --
-
+(Due to a misunderstanding, my first couple of commits were directly to main branch, these are listed below)
 Created main: https://github.com/remla25-team7/model-service/commit/6703f52efbbaa615d7f82ee4ca9f7116724e4f50 (related to A1)
 Created main: https://github.com/remla25-team7/lib-ml/commit/6404d6d6022089bf42fdf7a90dac6b9e8ebf75bf (related to A1)
 
@@ -31,6 +31,7 @@ Created PR: https://github.com/remla25-team7/operation/pull/3 (related to A2)
 Approved PR: https://github.com/remla25-team7/operation/pull/4 (related to A2)
 
 -- Seyidali Bulut --
+(Due to a misunderstanding my, first couple of commits were directly to dev branch and no PR was possible, these are listerd below)
 Pushed commit: https://github.com/remla25-team7/operation/pull/1/commits/18db4754fc1baac0d82f747db4a3af2ca9a51e08 (related to A2)
 
 
