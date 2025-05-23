@@ -1,41 +1,41 @@
-{{- if .Values.monitoring.enabled }}
-apiVersion: monitoring.coreos.com/v1
-kind: ServiceMonitor
-metadata:
-  name: sentiment-app-monitor
-  labels:
-    release: prometheus
-    team: restaurant-sentiment
-spec:
-  selector:
-    matchLabels:
-      app: sentiment-app
-  namespaceSelector:
-    any: true
-  endpoints:
-    - port: http
-      path: /metrics
-      interval: {{ .Values.monitoring.scrapeInterval | default "15s" }}
-      scheme: http
----
-apiVersion: monitoring.coreos.com/v1
-kind: ServiceMonitor
-metadata:
-  name: sentiment-model-monitor
-  labels:
-    release: prometheus
-    team: restaurant-sentiment
-spec:
-  selector:
-    matchLabels:
-      app: sentiment-model 
-  namespaceSelector:
-    any: true
-  endpoints:
-    - port: http
-      path: /metrics
-      interval: {{ .Values.monitoring.scrapeInterval | default "15s" }}
-      scheme: http
-#
-# This ServiceMonitor will let Prometheus discover and scrape metrics from both your app and model-service.
-{{- end }} 
+# {{- if .Values.monitoring.enabled }}
+# apiVersion: monitoring.coreos.com/v1
+# kind: ServiceMonitor
+# metadata:
+#   name: sentiment-app-monitor
+#   labels:
+#     release: prometheus
+#     team: restaurant-sentiment
+# spec:
+#   selector:
+#     matchLabels:
+#       app: sentiment-app
+#   namespaceSelector:
+#     any: true
+#   endpoints:
+#     - port: http
+#       path: /metrics
+#       interval: {{ .Values.monitoring.scrapeInterval | default "15s" }}
+#       scheme: http
+# ---
+# apiVersion: monitoring.coreos.com/v1
+# kind: ServiceMonitor
+# metadata:
+#   name: sentiment-model-monitor
+#   labels:
+#     release: prometheus
+#     team: restaurant-sentiment
+# spec:
+#   selector:
+#     matchLabels:
+#       app: sentiment-model 
+#   namespaceSelector:
+#     any: true
+#   endpoints:
+#     - port: http
+#       path: /metrics
+#       interval: {{ .Values.monitoring.scrapeInterval | default "15s" }}
+#       scheme: http
+# #
+# # This ServiceMonitor will let Prometheus discover and scrape metrics from both app and model-service.
+# {{- end }} 

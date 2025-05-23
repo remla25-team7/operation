@@ -1,23 +1,23 @@
-{{- if .Values.monitoring.enabled }}
-apiVersion: monitoring.coreos.com/v1
-kind: PrometheusRule
-metadata:
-  name: sentiment-app-alerts
-  labels:
-    release: prometheus
-    team: restaurant-sentiment
-spec:
-  groups:
-    - name: app.rules
-      rules:
-        - alert: HighRequestRate
-          expr: sum(rate(http_requests_total{job="sentiment-app"}[1m])) > {{ .Values.monitoring.appRequestRateThreshold | default 15 }}
-          for: {{ .Values.monitoring.appRequestRateDuration | default "2m" }}
-          labels:
-            severity: warning
-          annotations:
-            summary: "High request rate detected on sentiment-app"
-            description: "The sentiment-app received more than {{ .Values.monitoring.appRequestRateThreshold | default 15 }} requests per minute for at least {{ .Values.monitoring.appRequestRateDuration | default "2m" }}."
-#
-# This PrometheusRule will trigger an alert if your app receives more than the configured requests per minute for the configured duration.
-{{- end }}
+# {{- if .Values.monitoring.enabled }}
+# apiVersion: monitoring.coreos.com/v1
+# kind: PrometheusRule
+# metadata:
+#   name: sentiment-app-alerts
+#   labels:
+#     release: prometheus
+#     team: restaurant-sentiment
+# spec:
+#   groups:
+#     - name: app.rules
+#       rules:
+#         - alert: HighRequestRate
+#           expr: sum(rate(http_requests_total{job="sentiment-app"}[1m])) > {{ .Values.monitoring.appRequestRateThreshold | default 15 }}
+#           for: {{ .Values.monitoring.appRequestRateDuration | default "2m" }}
+#           labels:
+#             severity: warning
+#           annotations:
+#             summary: "High request rate detected on sentiment-app"
+#             description: "The sentiment-app received more than {{ .Values.monitoring.appRequestRateThreshold | default 15 }} requests per minute for at least {{ .Values.monitoring.appRequestRateDuration | default "2m" }}."
+# #
+# # This PrometheusRule will trigger an alert if app receives more than the configured requests per minute for the configured duration.
+# {{- end }}

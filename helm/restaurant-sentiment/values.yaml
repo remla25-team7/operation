@@ -1,5 +1,5 @@
 app:
-  image: ghcr.io/remla25-team7/app:latest
+  image: ghcr.io/remla25-team7/app:release
   port: 5001
   host: app.local
 
