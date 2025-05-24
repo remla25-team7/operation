@@ -141,54 +141,27 @@ kubectl -n kubernetes-dashboard create token admin-user
 
 ### Assignment 3
 
-#### 1. Install Istio (Manual)
+### 1. Installing Prometheus with Helm
 
-1. SSH into the control VM:
+To install the Prometheus kube-prometheus-stack chart from the `prometheus-community` repository, run the following command:
 
-   ```bash
-   vagrant ssh ctrl
-   ```
+```bash
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts && \
+helm repo update && \
+helm install prometheus prometheus-community/kube-prometheus-stack --namespace monitoring --create-namespace
+```
 
-2. Install Istio with the demo profile:
-
-   ```bash
-   istioctl install --set profile=demo --skip-confirmation
-   ```
-
-   This will install Istio without waiting for confirmation.
-
-## Deploying the App with Helm
-
-### 1. Navigate to the Helm Chart Directory
+### 2. Navigate to the Helm Chart Directory
 
 ```bash
 cd helm/restaurant-sentiment
 ```
 
-### 2. Update `values.yaml` with Image Names
-
-```yaml
-app:
-  image: ghcr.io/remla25-team7/app:latest
-  port: 5001
-  host: app.local
-
-modelService:
-  image: ghcr.io/remla25-team7/model-service:latest
-  port: 8080
-  host: model.local
-```
-
-Find image names using:
-
-- `docker images`
-- GitHub Container Registry
-
 ### 3. Install Prometheus Operator CRDs and install the Helm Chart
 
 ```bash
-kubectl apply -f https://raw.githubusercontent.com/prometheus-operator/prometheus-operator/main/example/prometheus-operator-crd/monitoring.coreos.com_prometheusrules.yaml
-kubectl apply -f https://raw.githubusercontent.com/prometheus-operator/prometheus-operator/main/example/prometheus-operator-crd/monitoring.coreos.com_servicemonitors.yaml
+kubectl apply -f https://raw.githubusercontent.com/prometheus-operator/prometheus-operator/main/example/prometheus-operator-crd/monitoring.coreos.com_prometheusrules.yaml && \
+kubectl apply -f https://raw.githubusercontent.com/prometheus-operator/prometheus-operator/main/example/prometheus-operator-crd/monitoring.coreos.com_servicemonitors.yaml && \
 helm install sentiment .
 ```
 
@@ -219,6 +192,25 @@ You should see:
 
 ---
 
+### 6. Access Prometheus UI locally
+
+```bash
+kubectl port-forward -n monitoring svc/prometheus-kube-prometheus-prometheus 9090:9090
+```
+
+You can also test Prometheus alert running this command:
+while true; do curl -s http://localhost:5001/ > /dev/null; done
+
+### 7. Debuging
+
+If a new image is pulled and you want to rerun the helm run these commands:
+
+```bash
+kubectl rollout restart deployment app
+cd helm/restaurant-sentiment
+kubectl helm upgrade sentiment .
+```
+
 ## Libraries Used in App/Model
 
 Ensure these are installed in your Docker images:
@@ -235,9 +227,5 @@ prometheus_client   # TODO: expose Prometheus metrics from Flask apps
 
 ## Assignment 3 To-Dos
 
-- [ ] Add `/metrics` endpoint to both app and model-service using `prometheus_client`
-- [ ] Deploy Prometheus via Helm or K8s manifests
-- [ ] Create a `ServiceMonitor` to scrape the metrics
 - [ ] Deploy Grafana via Helm
 - [ ] Create and load a custom Grafana dashboard
-- [ ] Optional: Configure AlertManager with Prometheus rules

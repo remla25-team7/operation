@@ -6,8 +6,9 @@ metadata:
     app: sentiment-app
 spec:
   selector:
-    app: app
+    app: sentiment-app
   ports:
-    - port: {{ .Values.app.port }}
+    - name: http
+      port: {{ .Values.app.port }}
       targetPort: {{ .Values.app.port }}
   type: ClusterIP

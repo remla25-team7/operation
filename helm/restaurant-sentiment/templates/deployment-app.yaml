@@ -2,19 +2,22 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: app
+  labels:
+    app: sentiment-app
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: app
+      app: sentiment-app
   template:
     metadata:
       labels:
-        app: app
+        app: sentiment-app
     spec:
       containers:
         - name: app
           image: {{ .Values.app.image }}
+          imagePullPolicy: {{ .Values.app.imagePullPolicy | default "IfNotPresent" }}
           ports:
             - containerPort: {{ .Values.app.port }}
           envFrom:
