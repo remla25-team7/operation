@@ -100,43 +100,37 @@ This repository serves as the main entry point for the **Sentiment Analysis Syst
 
 ```bash
 git clone <repo-url> && cd <repo-dir>
-vagrant up
+vagrant up --provision
 ```
 
-This will:
+#### 2. Load kubeconfig to all your terminal sessions
 
-1. Boot **ctrl**, **node-1**, and **node-2** VMs
-2. Run Ansible to install Kubernetes, containerd, MetalLB, nginx-ingress, and the Dashboard
+Depending on what terminal you are using:
+if you are using zsh or
 
-#### 2. Point `dashboard.local` at the Load Balancer IP
-
-Add the following line to your host’s `/etc/hosts`:
-
-```
-192.168.56.95   dashboard.local
+```bash
+nano ~/.zshrc
 ```
 
-#### 3. Browse the Dashboard
+or if you are using bash.
 
-Open in your browser:
-
-```
-https://dashboard.local/
+```bash
+nano ~/.bashrc
 ```
 
-##### 3.1 CTRL port-forwarding
+Copy the full path of the file named kubeconfig in this repository.
+Then paste this line at the end of your .bashrc/.zshrc: export KUBECONFIG=path/to/your/operation/kubeconfig
+
+#### 3. Obtain access token
+
+kubectl -n kubernetes-dashboard create token admin-user
+
+##### 3.1 Kubernetes Dashboard port-forwarding
+
+Run the Kubernetes Dashboard and paste the token in the browser to login.
 
 ```bash
 kubectl -n kubernetes-dashboard port-forward svc/kubernetes-dashboard-kong-proxy 8443:443
-```
-
-#### 4. Log in as Admin
-
-Retrieve your token on the control VM:
-
-```bash
-vagrant ssh ctrl
-kubectl -n kubernetes-dashboard create token admin-user
 ```
 
 ### Assignment 3
@@ -174,22 +168,6 @@ kubectl get ingress
 kubectl port-forward svc/sentiment-app 5001:5001
 ```
 
-You should see:
-
-- `app` and `model-service` pods in `Running` status
-- `app.local` and `model.local` routes via Ingress
-
-### 5. Test in Browser or Curl
-
-- App UI: [http://app.local](http://app.local)
-- Model Endpoint:
-
-  ```bash
-  curl -X POST http://model.local/predict \
-    -H "Content-Type: application/json" \
-    -d '{"review": "The food was great!"}'
-  ```
-
 ---
 
 ### 6. Access Prometheus UI locally
@@ -199,7 +177,10 @@ kubectl port-forward -n monitoring svc/prometheus-kube-prometheus-prometheus 909
 ```
 
 You can also test Prometheus alert running this command:
+
+```bash
 while true; do curl -s http://localhost:5001/ > /dev/null; done
+```
 
 ### 7. Debuging
 
@@ -209,18 +190,6 @@ If a new image is pulled and you want to rerun the helm run these commands:
 kubectl rollout restart deployment app
 cd helm/restaurant-sentiment
 kubectl helm upgrade sentiment .
-```
-
-## Libraries Used in App/Model
-
-Ensure these are installed in your Docker images:
-
-```text
-flask
-requests
-joblib
-scikit-learn
-prometheus_client   # TODO: expose Prometheus metrics from Flask apps
 ```
 
 ---
