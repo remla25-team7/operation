@@ -3,4 +3,4 @@ kind: ConfigMap
 metadata:
   name: env-config
 data:
-  MODEL_SERVICE_URL: "http://model-service:8080/predict"
+  MODEL_SERVICE_URL: "http://sentiment-model:8080"

@@ -28,7 +28,7 @@ metadata:
 spec:
   selector:
     matchLabels:
-      app: sentiment-model 
+      app: sentiment-model
   namespaceSelector:
     any: true
   endpoints:
@@ -36,6 +36,4 @@ spec:
       path: /metrics
       interval: {{ .Values.monitoring.scrapeInterval | default "15s" }}
       scheme: http
-#
-# This ServiceMonitor will let Prometheus discover and scrape metrics from both your app and model-service.
-{{- end }} 
+{{- end }}

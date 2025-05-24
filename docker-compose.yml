@@ -12,7 +12,7 @@ services:
       - app-logs:/var/log/app
     restart: always
     depends_on:
-     - model-service
+      - model-service
 
   model-service:
     image: ${MODEL_SERVICE_IMAGE}:${MODEL_SERVICE_VERSION}
@@ -27,7 +27,6 @@ services:
 volumes:
   app-logs:
   model-cache:
-
 #secrets:
 #  model-credentials:
 #    file: ./secrets/model_credentials.txt

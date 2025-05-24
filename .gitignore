@@ -4,3 +4,4 @@ kubeconfig
 Readme.md
 kubeinit.out
 inventory.cfg
+join_command.sh

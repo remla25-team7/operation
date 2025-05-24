@@ -1,10 +1,13 @@
 app:
   image: ghcr.io/remla25-team7/app:latest
+  imagePullPolicy: Always
   port: 5001
   host: app.local
+  
 
 modelService:
   image: ghcr.io/remla25-team7/model-service:latest
+  imagePullPolicy: Always
   port: 8080
   host: model.local
 
