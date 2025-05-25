@@ -1,0 +1,21 @@
+apiVersion: monitoring.coreos.com/v1
+kind: AlertmanagerConfig
+metadata:
+  name: alertmanager-email-config
+  namespace: monitoring
+spec:
+  global:
+    smtp_smarthost: 'smtp.gmail.com:587'
+    smtp_from: 'cristiancomend@gmail.com'
+    smtp_auth_username: 'cristiancomend@gmail.com'
+    smtp_auth_password_file: /etc/alertmanager/secrets/smtp_auth_password
+
+  route:
+    receiver: email-alert
+
+  receivers:
+  - name: email-alert
+    emailConfigs:
+    - to: 'cristiancomend@tudelft.nl'
+      sendResolved: true
+

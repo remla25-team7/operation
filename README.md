@@ -119,15 +119,21 @@ nano ~/.bashrc
 ```
 
 Copy the full path of the file named kubeconfig in this repository.
-Then paste this line at the end of your .bashrc/.zshrc: export KUBECONFIG=path/to/your/operation/kubeconfig
+Then paste this line at the end of your .bashrc/.zshrc:
+
+```bash
+export KUBECONFIG=path/to/your/operation/kubeconfig
+```
 
 #### 3. Obtain access token
 
+```bash
 kubectl -n kubernetes-dashboard create token admin-user
+```
 
 ##### 3.1 Kubernetes Dashboard port-forwarding
 
-Run the Kubernetes Dashboard and paste the token in the browser to login.
+Run the Kubernetes Dashboard and paste the token in the browser to login. https://localhost:8443
 
 ```bash
 kubectl -n kubernetes-dashboard port-forward svc/kubernetes-dashboard-kong-proxy 8443:443
@@ -151,11 +157,9 @@ helm install prometheus prometheus-community/kube-prometheus-stack --namespace m
 cd helm/restaurant-sentiment
 ```
 
-### 3. Install Prometheus Operator CRDs and install the Helm Chart
+### 3. Install the Helm Chart
 
 ```bash
-kubectl apply -f https://raw.githubusercontent.com/prometheus-operator/prometheus-operator/main/example/prometheus-operator-crd/monitoring.coreos.com_prometheusrules.yaml && \
-kubectl apply -f https://raw.githubusercontent.com/prometheus-operator/prometheus-operator/main/example/prometheus-operator-crd/monitoring.coreos.com_servicemonitors.yaml && \
 helm install sentiment .
 ```
 
