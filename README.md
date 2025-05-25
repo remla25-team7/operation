@@ -132,6 +132,7 @@ Run the Kubernetes Dashboard and paste the token in the browser to login.
 ```bash
 kubectl -n kubernetes-dashboard port-forward svc/kubernetes-dashboard-kong-proxy 8443:443
 ```
+Kubernetes can be accessed through http://localhost:8443
 
 ### Assignment 3
 
@@ -168,6 +169,9 @@ kubectl get ingress
 kubectl port-forward svc/sentiment-app 5001:5001
 ```
 
+App-service can be accessed through http://localhost:5001
+App-service metrics can be accessed through http://localhost:5001/metrics
+
 ---
 
 ### 6. Access Prometheus UI locally
@@ -175,6 +179,7 @@ kubectl port-forward svc/sentiment-app 5001:5001
 ```bash
 kubectl port-forward -n monitoring svc/prometheus-kube-prometheus-prometheus 9090:9090
 ```
+Prometheus can be accessed through http://localhost:9090
 
 You can also test Prometheus alert running this command:
 
@@ -194,7 +199,26 @@ kubectl helm upgrade sentiment .
 
 ---
 
-## Assignment 3 To-Dos
+### 8. Creating and Acessing Grafana
 
-- [ ] Deploy Grafana via Helm
-- [ ] Create and load a custom Grafana dashboard
+
+Run the following line to start Grafana Dashboard
+
+```bash
+kubectl port-forward svc/prometheus-grafana 3000:80 -n monitoring
+```
+
+Grafana Dashboard can be accessed through http://localhost:3000
+
+Admin login username and password:
+
+Username: Admin
+Password: prom-operator
+
+The dashboard should be visible under the name "Restaurant Sentiment Dashboard"
+
+If a new image is pulled and you want to rerun the grafana, run these commands:
+
+```bash
+kubectl rollout restart deployment prometheus-grafana -n monitoring
+```
