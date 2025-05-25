@@ -30,7 +30,7 @@ This repository serves as the main entry point for the **Sentiment Analysis Syst
    cd operation
    ```
 
-2. **Create the `secrets` folder** (if it doesn’t exist)
+2. **Create the `secrets` folder** (if it doesn't exist)
 
    ```bash
    mkdir -p secrets
@@ -119,15 +119,21 @@ nano ~/.bashrc
 ```
 
 Copy the full path of the file named kubeconfig in this repository.
-Then paste this line at the end of your .bashrc/.zshrc: export KUBECONFIG=path/to/your/operation/kubeconfig
+Then paste this line at the end of your .bashrc/.zshrc:
+
+```bash
+export KUBECONFIG=path/to/your/operation/kubeconfig
+```
 
 #### 3. Obtain access token
 
+```bash
 kubectl -n kubernetes-dashboard create token admin-user
+```
 
 ##### 3.1 Kubernetes Dashboard port-forwarding
 
-Run the Kubernetes Dashboard and paste the token in the browser to login.
+Run the Kubernetes Dashboard and paste the token in the browser to login. https://localhost:8443
 
 ```bash
 kubectl -n kubernetes-dashboard port-forward svc/kubernetes-dashboard-kong-proxy 8443:443
@@ -140,8 +146,8 @@ kubectl -n kubernetes-dashboard port-forward svc/kubernetes-dashboard-kong-proxy
 To install the Prometheus kube-prometheus-stack chart from the `prometheus-community` repository, run the following command:
 
 ```bash
-helm repo add prometheus-community https://prometheus-community.github.io/helm-charts && \
-helm repo update && \
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+helm repo update
 helm install prometheus prometheus-community/kube-prometheus-stack --namespace monitoring --create-namespace
 ```
 
@@ -151,11 +157,9 @@ helm install prometheus prometheus-community/kube-prometheus-stack --namespace m
 cd helm/restaurant-sentiment
 ```
 
-### 3. Install Prometheus Operator CRDs and install the Helm Chart
+### 3. Install the Helm Chart
 
 ```bash
-kubectl apply -f https://raw.githubusercontent.com/prometheus-operator/prometheus-operator/main/example/prometheus-operator-crd/monitoring.coreos.com_prometheusrules.yaml && \
-kubectl apply -f https://raw.githubusercontent.com/prometheus-operator/prometheus-operator/main/example/prometheus-operator-crd/monitoring.coreos.com_servicemonitors.yaml && \
 helm install sentiment .
 ```
 
@@ -170,26 +174,42 @@ kubectl port-forward svc/sentiment-app 5001:5001
 
 ---
 
-### 6. Access Prometheus UI locally
+### 6. Access Prometheus UI
 
 ```bash
 kubectl port-forward -n monitoring svc/prometheus-kube-prometheus-prometheus 9090:9090
 ```
 
-You can also test Prometheus alert running this command:
+Open [http://localhost:9090](http://localhost:9090) in your browser.
+
+### 7. Enable Email Alerts
+
+1. Edit `values.yaml` and set your email and SMTP details under `.Values.alertmanager.email`.
+2. If using Gmail with 2FA, create an [App Password](https://support.google.com/accounts/answer/185833?hl=en).
+3. Create the SMTP password secret:
+
+```bash
+   kubectl create secret generic kube-prometheus-stack-alertmanager-secret --from-literal=smtpPassword='your-app-password' -n monitoring
+   kubectl delete pod alertmanager-prometheus-kube-prometheus-alertmanager -n monitoring
+   cd helm/restaurant-sentiment && helm upgrade sentiment .
+```
+
+### 8. Test Alerts
+
+Generate traffic to trigger alerts:
 
 ```bash
 while true; do curl -s http://localhost:5001/ > /dev/null; done
 ```
 
-### 7. Debuging
+### 9. Debugging
 
-If a new image is pulled and you want to rerun the helm run these commands:
+If you update your app image or Helm chart and want to redeploy:
 
 ```bash
 kubectl rollout restart deployment app
 cd helm/restaurant-sentiment
-kubectl helm upgrade sentiment .
+helm upgrade sentiment .
 ```
 
 ---

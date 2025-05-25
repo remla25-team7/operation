@@ -16,3 +16,14 @@ monitoring:
   scrapeInterval: 15s
   appRequestRateThreshold: 15
   appRequestRateDuration: 2m
+
+# AlertManager configuration for email alerts
+alertmanager:
+  enabled: true
+  fullname: kube-prometheus-stack
+  email:
+    to: 'to-mail@gmail.com'
+    from: 'from-mail@gmail.com'
+    smarthost: 'smtp.gmail.com:587'
+    authUsername: 'from-mail@gmail.com'
+    requireTLS: true
