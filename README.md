@@ -6,11 +6,11 @@ This repository serves as the main entry point for the **Sentiment Analysis Syst
 
 ### Related Repositories
 
-- **Model Training**: [github.com/remla25-team7/model-training](https://github.com/remla25-team7/model-training)  
-- **Model Service**: [github.com/remla25-team7/model-service](https://github.com/remla25-team7/model-service)  
-- **Library for Machine Learning (lib-ml)**: [github.com/remla25-team7/lib-ml](https://github.com/remla25-team7/lib-ml)  
-- **Library for Versioning (lib-version)**: [github.com/remla25-team7/lib-version](https://github.com/remla25-team7/lib-version)  
-- **Application Frontend and Service (app)**: [github.com/remla25-team7/app](https://github.com/remla25-team7/app)  
+- **Model Training**: [github.com/remla25-team7/model-training](https://github.com/remla25-team7/model-training)
+- **Model Service**: [github.com/remla25-team7/model-service](https://github.com/remla25-team7/model-service)
+- **Library for Machine Learning (lib-ml)**: [github.com/remla25-team7/lib-ml](https://github.com/remla25-team7/lib-ml)
+- **Library for Versioning (lib-version)**: [github.com/remla25-team7/lib-version](https://github.com/remla25-team7/lib-version)
+- **Application Frontend and Service (app)**: [github.com/remla25-team7/app](https://github.com/remla25-team7/app)
 
 ---
 
@@ -18,18 +18,19 @@ This repository serves as the main entry point for the **Sentiment Analysis Syst
 
 ### Prerequisites
 
-- [Docker](https://www.docker.com/)  
-- [Docker Compose](https://docs.docker.com/compose/)  
+- [Docker](https://www.docker.com/)
+- [Docker Compose](https://docs.docker.com/compose/)
 
 ### Running the Application
 
-1. **Clone this repository**  
+1. **Clone this repository**
+
    ```bash
    git clone https://github.com/remla25-team7/operation.git
    cd operation
    ```
 
-2. **Create the `secrets` folder** (if it doesn’t exist)
+2. **Create the `secrets` folder** (if it doesn't exist)
 
    ```bash
    mkdir -p secrets
@@ -47,8 +48,6 @@ This repository serves as the main entry point for the **Sentiment Analysis Syst
    docker-compose up -d
    ```
 
-
-
 ## Code Structure
 
 | File / Directory                | Purpose                                                                                                          |
@@ -64,114 +63,99 @@ This repository serves as the main entry point for the **Sentiment Analysis Syst
 
 ### Assignment A1
 
-* **Model-Training**
+- **Model-Training**
 
-  * Created the ML training pipeline using a Hugging Face model.
-* **Model-Service**
+  - Created the ML training pipeline using a Hugging Face model.
 
-  * Containerized the ML model with Docker and exposed it via a Flask REST API.
-  * Implemented a GitHub Actions workflow to automatically build and publish the container.
-* **Lib-ML**
+- **Model-Service**
 
-  * Standardized preprocessing in a PyPI package used by both training and the model service.
-* **Lib-Version**
+  - Containerized the ML model with Docker and exposed it via a Flask REST API.
+  - Implemented a GitHub Actions workflow to automatically build and publish the container.
 
-  * Built a version-checker utility for the app service.
-* **App**
+- **Lib-ML**
 
-  * Developed a Dockerized web application using HTML/Bootstrap 5 (frontend) and Flask (backend).
-* **Operation**
+  - Standardized preprocessing in a PyPI package used by both training and the model service.
 
-  * Centralized deployment configurations in this repository, featuring Docker Compose and detailed README instructions.
+- **Lib-Version**
+
+  - Built a version-checker utility for the app service.
+
+- **App**
+
+  - Developed a Dockerized web application using HTML/Bootstrap 5 (frontend) and Flask (backend).
+
+- **Operation**
+
+  - Centralized deployment configurations in this repository, featuring Docker Compose and detailed README instructions.
 
 ### Assignment A2
 
 #### Prerequisites
 
-* **Vagrant** & **VirtualBox** installed
-* **Ansible 2.18+** on host (or use the bundled Vagrant provisioner)
-* Host OS user must be able to edit `/etc/hosts`
+- **Vagrant** & **VirtualBox** installed
+- **Ansible 2.18+** on host (or use the bundled Vagrant provisioner)
+- Host OS user must be able to edit `/etc/hosts`
 
 #### 1. Clone & Spin Up
 
 ```bash
 git clone <repo-url> && cd <repo-dir>
-vagrant up
+vagrant up --provision
 ```
 
-This will:
+#### 2. Load kubeconfig to all your terminal sessions
 
-1. Boot **ctrl**, **node-1**, and **node-2** VMs
-2. Run Ansible to install Kubernetes, containerd, MetalLB, nginx-ingress, and the Dashboard
-
-#### 2. Point `dashboard.local` at the Load Balancer IP
-
-Add the following line to your host’s `/etc/hosts`:
-
-```
-192.168.56.95   dashboard.local
-```
-
-#### 3. Browse the Dashboard
-
-Open in your browser:
-
-```
-https://dashboard.local/
-```
-
-#### 4. Log in as Admin
-
-Retrieve your token on the control VM:
+Depending on what terminal you are using:
+if you are using zsh or
 
 ```bash
-vagrant ssh ctrl
+nano ~/.zshrc
+```
+
+or if you are using bash.
+
+```bash
+nano ~/.bashrc
+```
+
+Copy the full path of the file named kubeconfig in this repository.
+Then paste this line at the end of your .bashrc/.zshrc:
+
+```bash
+export KUBECONFIG=path/to/your/operation/kubeconfig
+```
+
+#### 3. Obtain access token
+
+```bash
 kubectl -n kubernetes-dashboard create token admin-user
 ```
+
+##### 3.1 Kubernetes Dashboard port-forwarding
+
+Run the Kubernetes Dashboard and paste the token in the browser to login. https://localhost:8443
+
+```bash
+kubectl -n kubernetes-dashboard port-forward svc/kubernetes-dashboard-kong-proxy 8443:443
+```
+
 ### Assignment 3
-#### 1. Install Istio (Manual)
 
-1. SSH into the control VM:
+### 1. Installing Prometheus with Helm
 
-   ```bash
-   vagrant ssh ctrl
-   ```
+To install the Prometheus kube-prometheus-stack chart from the `prometheus-community` repository, run the following command:
 
-2. Install Istio with the demo profile:
+```bash
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+helm repo update
+helm install prometheus prometheus-community/kube-prometheus-stack --namespace monitoring --create-namespace
+```
 
-   ```bash
-   istioctl install --set profile=demo --skip-confirmation
-   ```
-
-   This will install Istio without waiting for confirmation.
-
-
-## Deploying the App with Helm
-
-### 1. Navigate to the Helm Chart Directory
+### 2. Navigate to the Helm Chart Directory
 
 ```bash
 cd helm/restaurant-sentiment
 ```
-
-### 2. Update `values.yaml` with Image Names
-
-```yaml
-app:
-  image: ghcr.io/remla25-team7/app:latest
-  port: 5001
-  host: app.local
-
-modelService:
-  image: ghcr.io/remla25-team7/model-service:latest
-  port: 8080
-  host: model.local
-```
-
-Find image names using:
-
-* `docker images`
-* GitHub Container Registry
 
 ### 3. Install the Helm Chart
 
@@ -179,51 +163,58 @@ Find image names using:
 helm install sentiment .
 ```
 
-### 4. Check that it Works
+### 4. Check that it Works and port-forward the app-service
 
 ```bash
 kubectl get pods
 kubectl get svc
 kubectl get ingress
+kubectl port-forward svc/sentiment-app 5001:5001
 ```
-
-You should see:
-
-* `app` and `model-service` pods in `Running` status
-* `app.local` and `model.local` routes via Ingress
-
-### 5. Test in Browser or Curl
-
-* App UI: [http://app.local](http://app.local)
-* Model Endpoint:
-
-  ```bash
-  curl -X POST http://model.local/predict \
-    -H "Content-Type: application/json" \
-    -d '{"review": "The food was great!"}'
-  ```
 
 ---
 
-## Libraries Used in App/Model
+### 6. Access Prometheus UI
 
-Ensure these are installed in your Docker images:
+```bash
+kubectl port-forward -n monitoring svc/prometheus-kube-prometheus-prometheus 9090:9090
+```
 
-```text
-flask
-requests
-joblib
-scikit-learn
-prometheus_client   # TODO: expose Prometheus metrics from Flask apps
+Open [http://localhost:9090](http://localhost:9090) in your browser.
+
+### 7. Enable Email Alerts
+
+1. Edit `values.yaml` and set your email and SMTP details under `.Values.alertmanager.email`.
+2. If using Gmail with 2FA, create an [App Password](https://support.google.com/accounts/answer/185833?hl=en).
+3. Create the SMTP password secret:
+
+```bash
+   kubectl create secret generic kube-prometheus-stack-alertmanager-secret --from-literal=smtpPassword='your-app-password' -n monitoring
+   kubectl delete pod alertmanager-prometheus-kube-prometheus-alertmanager -n monitoring
+   cd helm/restaurant-sentiment && helm upgrade sentiment .
+```
+
+### 8. Test Alerts
+
+Generate traffic to trigger alerts:
+
+```bash
+while true; do curl -s http://localhost:5001/ > /dev/null; done
+```
+
+### 9. Debugging
+
+If you update your app image or Helm chart and want to redeploy:
+
+```bash
+kubectl rollout restart deployment app
+cd helm/restaurant-sentiment
+helm upgrade sentiment .
 ```
 
 ---
 
 ## Assignment 3 To-Dos
 
-* [ ] Add `/metrics` endpoint to both app and model-service using `prometheus_client`
-* [ ] Deploy Prometheus via Helm or K8s manifests
-* [ ] Create a `ServiceMonitor` to scrape the metrics
-* [ ] Deploy Grafana via Helm
-* [ ] Create and load a custom Grafana dashboard
-* [ ] Optional: Configure AlertManager with Prometheus rules
+- [ ] Deploy Grafana via Helm
+- [ ] Create and load a custom Grafana dashboard

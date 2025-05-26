@@ -1,0 +1,23 @@
+{{- if .Values.alertmanager.enabled }}
+apiVersion: monitoring.coreos.com/v1alpha1
+kind: AlertmanagerConfig
+metadata:
+  name: alertmanager-email-config
+  namespace: monitoring
+spec:
+  route:
+    receiver: email-alert
+
+  receivers:
+    - name: email-alert
+      emailConfigs:
+        - to: {{ .Values.alertmanager.email.to | quote }}
+          from: {{ .Values.alertmanager.email.from | quote }}
+          smarthost: {{ .Values.alertmanager.email.smarthost | quote }}
+          authUsername: {{ .Values.alertmanager.email.authUsername | quote }}
+          authPassword:
+            name: {{ .Values.alertmanager.fullname }}-alertmanager-secret
+            key: smtpPassword
+          requireTLS: {{ .Values.alertmanager.email.requireTLS }}
+          sendResolved: true
+{{- end }}

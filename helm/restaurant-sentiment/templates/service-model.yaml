@@ -8,6 +8,7 @@ spec:
   selector:
     app: model-service
   ports:
-    - port: {{ .Values.modelService.port }}
+    - name: http
+      port: {{ .Values.modelService.port }}
       targetPort: {{ .Values.modelService.port }}
   type: ClusterIP

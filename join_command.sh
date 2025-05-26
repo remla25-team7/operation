@@ -1,1 +1,1 @@
-kubeadm join 192.168.56.100:6443 --token pkk6tp.gjphfj94xt6f6ffv --discovery-token-ca-cert-hash sha256:72ea86d6dbb1e4a265f73c3d63e2aba1911ae22eb9a29515a5dfc19d61369187 --cri-socket=unix:///run/containerd/containerd.sock
+kubeadm join 192.168.56.100:6443 --token 0anbqt.vo26l4kmf5tidu0b --discovery-token-ca-cert-hash sha256:4d84ccccff4b2ae3e97106583d84f2859abad41fa28da167ade378687bd18d56 --cri-socket=unix:///run/containerd/containerd.sock
