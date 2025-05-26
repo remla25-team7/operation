@@ -115,3 +115,7 @@ Created PR: https://github.com/remla25-team7/model-training/pull/6 (related to A
 -- Seyidali Bulut --
 Created PR: https://github.com/remla25-team7/model-training/pull/7 (related A4)
 Approved PR: https://github.com/remla25-team7/model-training/pull/6 (related to A4)
+
+--Andrea Onofrei--
+Created PR: https://github.com/remla25-team7/model-training/pull/8 (related A4)
+Approved PR: https://github.com/remla25-team7/model-training/pull/5 (related to A4)
