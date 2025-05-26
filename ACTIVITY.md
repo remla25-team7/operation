@@ -104,6 +104,9 @@ Created PR: https://github.com/remla25-team7/operation/pull/15 (related to A2 an
 
 Approved PR: https://github.com/remla25-team7/operation/pull/16 (related to A3)
 
+-- Moegiez Bhatti --
+Approved PR: https://github.com/remla25-team7/model-training/pull/10
+
 # Week 6:
 
 -- Cristian Comendant --
