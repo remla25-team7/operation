@@ -14,9 +14,17 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: app
+                name: {{ .Values.app.name }}
                 port:
                   number: {{ .Values.app.port }}
+          - path: /metrics
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Values.app.name }}
+                port:
+                  number: {{ .Values.app.port }}
+
     - host: {{ .Values.modelService.host }}
       http:
         paths:
@@ -24,6 +32,6 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: model-service
+                name: {{ .Values.modelService.name }}
                 port:
                   number: {{ .Values.modelService.port }}
