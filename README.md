@@ -16,66 +16,75 @@ This repository serves as the main entry point for the **Sentiment Analysis Syst
 
 ## Getting Started with minikube(alternate way, this is temp location in readme)
 
-Minikube Deployment Quickstart
+# Minikube Deployment Quickstart
 
-Prerequisites
-	•	Docker Desktop installed and running
-	•	Minikube installed
-	•	kubectl installed
-	•	Helm installed
+## Prerequisites
+- [ ] [Docker Desktop](https://www.docker.com/products/docker-desktop) installed and running
+- [ ] [Minikube](https://minikube.sigs.k8s.io/docs/start/) installed
+- [ ] [kubectl](https://kubernetes.io/docs/tasks/tools/) installed
+- [ ] [Helm](https://helm.sh/docs/intro/install/) installed
 
-Steps
-	1.	Start Minikube
+## Steps
 
-minikube start --driver=docker
+1. **Start Minikube**
 
+    ```bash
+    minikube start --driver=docker
+    ```
 
-	2.	Enable Ingress
+2. **Enable Ingress**
 
-minikube addons enable ingress
-minikube tunnel
+    ```bash
+    minikube addons enable ingress
+    minikube tunnel
+    ```
+    _Keep the `minikube tunnel` terminal open!_
 
-Keep the minikube tunnel terminal open!
+3. **Create Monitoring Namespace (if not already created)**
 
-	3.	Create Monitoring Namespace (if not already created)
+    ```bash
+    kubectl create namespace monitoring || true
+    ```
 
-kubectl create namespace monitoring || true
+4. **Add Prometheus Helm Repo and Install Monitoring Stack**
 
+    ```bash
+    helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+    helm repo update
+    helm install prometheus prometheus-community/kube-prometheus-stack --namespace monitoring --create-namespace
+    ```
 
-	4.	Add Prometheus Helm Repo and Install Monitoring Stack
+5. **Deploy the App with Helm**
 
-helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
-helm repo update
-helm install prometheus prometheus-community/kube-prometheus-stack --namespace monitoring --create-namespace
+    ```bash
+    cd operation/helm/restaurant-sentiment
+    helm install sentiment .
+    ```
 
+6. **Apply Ingress and ServiceMonitor**
 
-	5.	Deploy the App with Helm
+    ```bash
+    kubectl apply -f app-ingress.yaml
+    kubectl apply -f app-service-monitor.yaml
+    ```
 
-cd operation/helm/restaurant-sentiment
-helm install sentiment .
+7. **Edit `/etc/hosts` if needed**
 
+    Add this line:
+    ```
+    127.0.0.1 app.local
+    ```
 
-	6.	Apply Ingress and ServiceMonitor
+8. **Visit the App**
 
-kubectl apply -f app-ingress.yaml
-kubectl apply -f app-service-monitor.yaml
+    - Open [http://app.local](http://app.local) in your browser
 
+---
 
-	7.	Edit /etc/hosts if needed
-Add this line:
-
-127.0.0.1 app.local
-
-
-	8.	Visit the App
-	•	Open http://app.local in your browser
-
-⸻
-
-Troubleshooting
-	•	If you rebuild Docker images, use minikube image load my-app:latest before redeploying.
-	•	Use kubectl get pods to check app and monitoring pod status.
-	•	Make sure minikube tunnel is running to expose LoadBalancer services.
+## Troubleshooting
+- If you rebuild Docker images, use `minikube image load my-app:latest` before redeploying.
+- Use `kubectl get pods` to check app and monitoring pod status.
+- Make sure `minikube tunnel` is running to expose LoadBalancer services.
 
 ## Getting Started
 
