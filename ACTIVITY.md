@@ -117,6 +117,7 @@ Approved PR: https://github.com/remla25-team7/model-training/pull/7 (related to 
 Created PR: https://github.com/remla25-team7/model-training/pull/7 (related A4) \
 Created PR: https://github.com/remla25-team7/model-training/pull/11 (related A4)
 Approved PR: https://github.com/remla25-team7/model-training/pull/6 (related to A4)
+Approved PR: https://github.com/remla25-team7/operation/pull/24 (related to A5)
 
 -- Andrea Onofrei --
 
