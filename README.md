@@ -14,6 +14,69 @@ This repository serves as the main entry point for the **Sentiment Analysis Syst
 
 ---
 
+## Getting Started with minikube(alternate way, this is temp location in readme)
+
+Minikube Deployment Quickstart
+
+Prerequisites
+	•	Docker Desktop installed and running
+	•	Minikube installed
+	•	kubectl installed
+	•	Helm installed
+
+Steps
+	1.	Start Minikube
+
+minikube start --driver=docker
+
+
+	2.	Enable Ingress
+
+minikube addons enable ingress
+minikube tunnel
+
+Keep the minikube tunnel terminal open!
+
+	3.	Create Monitoring Namespace (if not already created)
+
+kubectl create namespace monitoring || true
+
+
+	4.	Add Prometheus Helm Repo and Install Monitoring Stack
+
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+helm repo update
+helm install prometheus prometheus-community/kube-prometheus-stack --namespace monitoring --create-namespace
+
+
+	5.	Deploy the App with Helm
+
+cd operation/helm/restaurant-sentiment
+helm install sentiment .
+
+
+	6.	Apply Ingress and ServiceMonitor
+
+kubectl apply -f app-ingress.yaml
+kubectl apply -f app-service-monitor.yaml
+
+
+	7.	Edit /etc/hosts if needed
+Add this line:
+
+127.0.0.1 app.local
+
+
+	8.	Visit the App
+	•	Open http://app.local in your browser
+
+⸻
+
+Troubleshooting
+	•	If you rebuild Docker images, use minikube image load my-app:latest before redeploying.
+	•	Use kubectl get pods to check app and monitoring pod status.
+	•	Make sure minikube tunnel is running to expose LoadBalancer services.
+
 ## Getting Started
 
 ### Prerequisites
@@ -139,6 +202,9 @@ Run the Kubernetes Dashboard and paste the token in the browser to login. https:
 kubectl -n kubernetes-dashboard port-forward svc/kubernetes-dashboard-kong-proxy 8443:443
 ```
 Kubernetes can be accessed through http://localhost:8443
+
+
+
 
 ### Assignment 3
 
