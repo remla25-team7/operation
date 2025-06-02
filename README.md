@@ -19,6 +19,7 @@ This repository serves as the main entry point for the **Sentiment Analysis Syst
 # Minikube Deployment Quickstart
 
 ## Prerequisites
+
 - [ ] [Docker Desktop](https://www.docker.com/products/docker-desktop) installed and running
 - [ ] [Minikube](https://minikube.sigs.k8s.io/docs/start/) installed
 - [ ] [kubectl](https://kubernetes.io/docs/tasks/tools/) installed
@@ -28,60 +29,63 @@ This repository serves as the main entry point for the **Sentiment Analysis Syst
 
 1. **Start Minikube**
 
-    ```bash
-    minikube start --driver=docker
-    ```
+   ```bash
+   minikube start --driver=docker
+   ```
 
 2. **Enable Ingress**
 
-    ```bash
-    minikube addons enable ingress
-    minikube tunnel
-    ```
-    _Keep the `minikube tunnel` terminal open!_
+   ```bash
+   minikube addons enable ingress
+   minikube tunnel
+   ```
+
+   _Keep the `minikube tunnel` terminal open!_
 
 3. **Create Monitoring Namespace (if not already created)**
 
-    ```bash
-    kubectl create namespace monitoring || true
-    ```
+   ```bash
+   kubectl create namespace monitoring || true
+   ```
 
 4. **Add Prometheus Helm Repo and Install Monitoring Stack**
 
-    ```bash
-    helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
-    helm repo update
-    helm install prometheus prometheus-community/kube-prometheus-stack --namespace monitoring --create-namespace
-    ```
+   ```bash
+   helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+   helm repo update
+   helm install prometheus prometheus-community/kube-prometheus-stack --namespace monitoring --create-namespace
+   ```
 
 5. **Deploy the App with Helm**
 
-    ```bash
-    cd operation/helm/restaurant-sentiment
-    helm install sentiment .
-    ```
+   ```bash
+   cd helm/restaurant-sentiment
+   helm upgrade sentiment .
+   ```
 
 6. **Apply Ingress and ServiceMonitor**
 
-    ```bash
-    kubectl apply -f app-ingress.yaml
-    kubectl apply -f app-service-monitor.yaml
-    ```
+   ```bash
+   kubectl apply -f app-ingress.yaml
+   kubectl apply -f app-service-monitor.yaml
+   ```
 
 7. **Edit `/etc/hosts` if needed**
 
-    Add this line:
-    ```
-    127.0.0.1 app.local
-    ```
+   Add this line:
+
+   ```
+   127.0.0.1 app.local
+   ```
 
 8. **Visit the App**
 
-    - Open [http://app.local](http://app.local) in your browser
+   - Open [http://app.local](http://app.local) in your browser
 
 ---
 
 ## Troubleshooting
+
 - If you rebuild Docker images, use `minikube image load my-app:latest` before redeploying.
 - Use `kubectl get pods` to check app and monitoring pod status.
 - Make sure `minikube tunnel` is running to expose LoadBalancer services.
@@ -210,10 +214,8 @@ Run the Kubernetes Dashboard and paste the token in the browser to login. https:
 ```bash
 kubectl -n kubernetes-dashboard port-forward svc/kubernetes-dashboard-kong-proxy 8443:443
 ```
+
 Kubernetes can be accessed through http://localhost:8443
-
-
-
 
 ### Assignment 3
 
@@ -258,6 +260,7 @@ App-service metrics can be accessed through http://localhost:5001/metrics
 ```bash
 kubectl port-forward -n monitoring svc/prometheus-kube-prometheus-prometheus 9090:9090
 ```
+
 Prometheus can be accessed through http://localhost:9090
 
 Open [http://localhost:9090](http://localhost:9090) in your browser.
@@ -295,7 +298,6 @@ helm upgrade sentiment .
 ---
 
 ### 8. Creating and Acessing Grafana
-
 
 Run the following line to start Grafana Dashboard
 

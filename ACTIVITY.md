@@ -131,7 +131,7 @@ Approved PR: 2/6 https://github.com/remla25-team7/model-training/pull/11
 
 -- Razvan Loghin --
 
-Approved PR: https://github.com/remla25-team7/app/pull/5 (related to A4) 
+Approved PR: https://github.com/remla25-team7/app/pull/5 (related to A4)
 
 # Week 7:
 
@@ -142,5 +142,5 @@ Approved PR: https://github.com/remla25-team7/operation/pull/25 (related to A5)
 
 -- Cristian Comendant --
 
-Created PR: https://github.com/remla25-team7/model-training/pull/6 (related to A4) \
-Approved PR: https://github.com/remla25-team7/model-training/pull/7 (related to A4)
+Created PR: https://github.com/remla25-team7/operation/pull/25 (related to A5) \
+Approved PR: https://github.com/remla25-team7/model-training/pull/12 (related to A4)
