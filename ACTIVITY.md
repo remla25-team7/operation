@@ -123,3 +123,4 @@ Approved PR: https://github.com/remla25-team7/model-training/pull/5 (related to 
 
 -- Moegiez Bhatti --
 Approved PR: https://github.com/remla25-team7/model-training/pull/10
+Approved PR: 2/6 https://github.com/remla25-team7/model-training/pull/11
