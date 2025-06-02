@@ -3,13 +3,14 @@ app:
   imagePullPolicy: Always
   port: 5001
   host: app.local
-  
+  name: sentiment-app         # ← Add this
 
 modelService:
   image: ghcr.io/remla25-team7/model-service:latest
   imagePullPolicy: Always
   port: 8080
   host: model.local
+  name: sentiment-model       # ← Add this
 
 monitoring:
   enabled: true
