@@ -144,3 +144,10 @@ Approved PR: https://github.com/remla25-team7/operation/pull/25 (related to A5)
 
 Created PR: https://github.com/remla25-team7/operation/pull/25 (related to A5) \
 Approved PR: https://github.com/remla25-team7/model-training/pull/12 (related to A4)
+
+# Week 8:
+
+-- Razvan Loghin --
+Approved PR: https://github.com/remla25-team7/app/pull/6 (realted to A1) \
+
+
