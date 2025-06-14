@@ -150,4 +150,8 @@ Approved PR: https://github.com/remla25-team7/model-training/pull/12 (related to
 -- Razvan Loghin --
 Approved PR: https://github.com/remla25-team7/app/pull/6 (realted to A1) \
 
+-- Seyidali Bulut --
+Created PR: https://github.com/remla25-team7/lib-version/pull/4 (related to A1)
+Approved PR: https://github.com/remla25-team7/model-service/pull/6 (related to A1)
+
 
