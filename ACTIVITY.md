@@ -156,4 +156,12 @@ Created PR: https://github.com/remla25-team7/lib-version/pull/5 (related to A1)
 Approved PR: https://github.com/remla25-team7/model-service/pull/6 (related to A1)
 Approved PR: https://github.com/remla25-team7/lib-ml/pull/4 (related to A1)
 
+-- Cristian Comendant --
 
+Created PR: https://github.com/remla25-team7/app/pull/6 (related to A1)
+Created PR: https://github.com/remla25-team7/model-service/pull/5 (related to A1)
+Created PR: https://github.com/remla25-team7/lib-ml/pull/4 (related to A1)
+Created PR: https://github.com/remla25-team7/app/pull/7 (related A1)
+Created PR: https://github.com/remla25-team7/operation/pull/48 (related to A1)
+Created PR: https://github.com/remla25-team7/model-service/pull/7 (related A1)
+Approved PR: https://github.com/remla25-team7/lib-version/pull/5 (related to A1)
