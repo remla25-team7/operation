@@ -128,6 +128,8 @@ Approved PR: https://github.com/remla25-team7/model-training/pull/5 (related to 
 
 Approved PR: https://github.com/remla25-team7/model-training/pull/10 \
 Approved PR: 2/6 https://github.com/remla25-team7/model-training/pull/11
+Created PR: https://github.com/remla25-team7/operation/pull/24#event-17943663690
+
 
 -- Razvan Loghin --
 
