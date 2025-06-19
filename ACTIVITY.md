@@ -17,7 +17,6 @@ Created PR: https://github.com/remla25-team7/lib-ml/pull/1 (related to A1) \
 -- Razvan Loghin --
 
 Created PR: https://github.com/remla25-team7/lib-ml/pull/2 (related to A1) \
-Created PR: https://github.com/remla25-team7/lib-ml/pull/1 (related to A1) \
 Created PR: https://github.com/remla25-team7/model-training/pull/3 (related to A1) \
 Approved PR: https://github.com/remla25-team7/operation/pull/1 (related to A1)
 
