@@ -8,13 +8,18 @@ Created main: https://github.com/remla25-team7/lib-ml/commit/6404d6d6022089bf42f
 Created PR: https://github.com/remla25-team7/model-training/pull/2 (related to A1) \
 Approved PR: https://github.com/remla25-team7/model-training/pull/1 (related to A1)
 
+-- Razvan Loghin --
+
+Created PR: https://github.com/remla25-team7/lib-ml/pull/1 (related to A1) \
+
 # Week 3:
 
 -- Razvan Loghin --
 
 Created PR: https://github.com/remla25-team7/lib-ml/pull/2 (related to A1) \
 Created PR: https://github.com/remla25-team7/lib-ml/pull/1 (related to A1) \
-Created PR: https://github.com/remla25-team7/model-training/pull/3 (related to A1)
+Created PR: https://github.com/remla25-team7/model-training/pull/3 (related to A1) \
+Approved PR: https://github.com/remla25-team7/operation/pull/1 (related to A1)
 
 -- Cristian Comendant --
 
@@ -45,8 +50,7 @@ Created PR: https://github.com/remla25-team7/model-training/pull/4 (related to A
 Created PR: https://github.com/remla25-team7/model-service/pull/2 (related to A1) \
 Created PR: https://github.com/remla25-team7/model-service/pull/3 (related to A1) \
 Created PR: https://github.com/remla25-team7/model-service/pull/4 (related to A1) \
-Created PR: https://github.com/remla25-team7/operation/pull/4 (related to A2)
-
+Created PR: https://github.com/remla25-team7/operation/pull/4 (related to A2)\
 Approved PR: https://github.com/remla25-team7/operation/pull/3 (related to A2)
 
 -- Cristian Comendant --
@@ -68,10 +72,10 @@ Created PR: https://github.com/remla25-team7/operation/pull/7 (related to A2) \
 Approved PR: https://github.com/remla25-team7/operation/pull/8 (related to A2)
 
 -- Moegiez Bhatti --
-Created:https://github.com/remla25-team7/operation/pull/9 (a2)
-Created:https://github.com/remla25-team7/model-service/pull/1 (a2)
-Approved:https://github.com/remla25-team7/operation/pull/10 (a2)
-Approved:https://github.com/remla25-team7/operation/pull/11) (a2)
+Created: https://github.com/remla25-team7/operation/pull/9 (a2)
+Created: https://github.com/remla25-team7/model-service/pull/1 (a2)
+Approved: https://github.com/remla25-team7/operation/pull/10 (a2)
+Approved: https://github.com/remla25-team7/operation/pull/11) (a2)
 
 # Week 5:
 
@@ -156,7 +160,8 @@ Created Pr: https://github.com/remla25-team7/model-service/pull/6
 Approved Pr: https://github.com/remla25-team7/lib-version/pull/4
 
 -- Razvan Loghin --
-Approved PR: https://github.com/remla25-team7/app/pull/6 (realted to A1) \
+Created PR: https://github.com/remla25-team7/model-training/pull/13 (related to A1) \
+Approved PR: https://github.com/remla25-team7/app/pull/6 (realted to A1) 
 
 -- Seyidali Bulut --
 Created PR: https://github.com/remla25-team7/lib-version/pull/4 (related to A1)
