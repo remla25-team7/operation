@@ -128,7 +128,7 @@ Approved PR: https://github.com/remla25-team7/model-training/pull/5 (related to 
 
 Approved PR: https://github.com/remla25-team7/model-training/pull/10 \
 Approved PR: 2/6 https://github.com/remla25-team7/model-training/pull/11
-Created PR: https://github.com/remla25-team7/operation/pull/24#event-17943663690
+Created PR: https://github.com/remla25-team7/operation/pull/24
 
 
 -- Razvan Loghin --
@@ -150,6 +150,7 @@ Approved PR: https://github.com/remla25-team7/model-training/pull/12 (related to
 # Week 8:
 --Moegiez Bhatti --
 Created Pr: https://github.com/remla25-team7/model-service/pull/6
+Approved Pr: https://github.com/remla25-team7/lib-version/pull/4
 
 -- Razvan Loghin --
 Approved PR: https://github.com/remla25-team7/app/pull/6 (realted to A1) \
