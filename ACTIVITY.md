@@ -128,7 +128,8 @@ Approved PR: https://github.com/remla25-team7/model-training/pull/5 (related to 
 
 Approved PR: https://github.com/remla25-team7/model-training/pull/10 \
 Approved PR: 2/6 https://github.com/remla25-team7/model-training/pull/11
-
+-- Moegiez Bhatti --
+Created PR: https://github.com/remla25-team7/operation/pull/24
 
 
 -- Razvan Loghin --
@@ -137,8 +138,7 @@ Approved PR: https://github.com/remla25-team7/app/pull/5 (related to A4)
 
 # Week 7:
 
--- Moegiez Bhatti --
-Created PR: https://github.com/remla25-team7/operation/pull/24
+
 
 -- Andrea Onofrei --
 
