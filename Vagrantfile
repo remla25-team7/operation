@@ -1,8 +1,4 @@
-Vagrant.configure("2") do |config|
-  # Base box (OS image)
-  config.vm.box = "bento/ubuntu-24.04"
-
-  # Variables to control the cluster
+# Variables to control the cluster
   NUM_WORKERS = 2
   CTRL_IP = "192.168.56.100"
   WORKER_BASE_IP = 101
@@ -12,8 +8,12 @@ Vagrant.configure("2") do |config|
   CTRL_CPUS = 2
   CTRL_MEM = 4096
 
+Vagrant.configure("2") do |config|
+  # Base box (OS image)
+  config.vm.box = "bento/ubuntu-24.04"
+
   # Generate inventroy.cfg
-  config.trigger.before [:up, :reload] do |trigger|
+  config.trigger.after [:up, :reload] do |trigger|
     trigger.name = "Generate ansible inventory file"
     trigger.ruby do
       require 'fileutils'
@@ -25,7 +25,7 @@ Vagrant.configure("2") do |config|
       File.open(inventory_file, "w") do |f|
         f.puts "[controller]"
         f.puts "#{controller} ansible_host=#{CTRL_IP} ansible_user=vagrant " \
-              "ansible_ssh_private_key_file=#{vagrant_path}/#{controller}/virtualbox/private_key " 
+              "ansible_ssh_private_key_file=./#{vagrant_path}/#{controller}/virtualbox/private_key " 
         f.puts ""
 
         f.puts "[nodes]"
@@ -33,7 +33,7 @@ Vagrant.configure("2") do |config|
           name = "node-#{i + 1}"
           ip = "#{SUBNET_PREFIX}#{WORKER_BASE_IP + i}"
           f.puts "#{name} ansible_host=#{ip} ansible_user=vagrant " \
-                "ansible_ssh_private_key_file=#{vagrant_path}/#{name}/virtualbox/private_key " 
+                "ansible_ssh_private_key_file=./#{vagrant_path}/#{name}/virtualbox/private_key " 
         end
 
         f.puts "\n[all:children]\ncontroller\nnodes\n"

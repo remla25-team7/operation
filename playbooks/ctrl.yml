@@ -1,5 +1,5 @@
 - name: Set up Kubernetes Controller
-  hosts: ctrl
+  hosts: controller
   become: yes
   vars:
     kubeinit_out: /vagrant/kubeinit.out
