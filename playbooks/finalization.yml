@@ -1,5 +1,5 @@
 - name: Install MetalLB
-  hosts: ctrl
+  hosts: controller
   become: yes
   vars:
     metallb_version: "v0.14.9"
