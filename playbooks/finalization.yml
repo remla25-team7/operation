@@ -139,14 +139,15 @@
       shell: |
         helm upgrade --install {{ dashboard_release }} kubernetes-dashboard/kubernetes-dashboard \
           --namespace {{ dashboard_namespace }} --create-namespace \
-          --wait
       args:
         executable: /bin/bash
       become_user: vagrant
 
-    - name: Wait for Dashboard pods to be ready
-      shell: kubectl wait --for=condition=ready pod --all \
-        -n {{ dashboard_namespace }} --timeout=180s
+    - name: Wait for each currently existing dashboard pod to be ready
+      shell: |
+        for pod in $(kubectl get pods -n {{ dashboard_namespace }} -o name); do
+          kubectl wait --for=condition=ready $pod -n {{ dashboard_namespace }} --timeout=180s || exit 1
+        done
       args:
         executable: /bin/bash
       become_user: vagrant
