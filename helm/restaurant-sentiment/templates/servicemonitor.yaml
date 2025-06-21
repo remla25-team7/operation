@@ -21,14 +21,14 @@ spec:
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
-  name: sentiment-model-monitor
+  name: {{ .Values.modelService.name }}-monitor
   labels:
     release: prometheus
     team: restaurant-sentiment
 spec:
   selector:
     matchLabels:
-      app: sentiment-model
+      app: {{ .Values.modelService.name }}
   namespaceSelector:
     any: true
   endpoints:

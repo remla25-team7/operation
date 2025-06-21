@@ -24,7 +24,6 @@ spec:
                 name: {{ .Values.app.name }}
                 port:
                   number: {{ .Values.app.port }}
-
     - host: {{ .Values.modelService.host }}
       http:
         paths:

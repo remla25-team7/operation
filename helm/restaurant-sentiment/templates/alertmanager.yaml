@@ -2,7 +2,7 @@
 apiVersion: monitoring.coreos.com/v1alpha1
 kind: AlertmanagerConfig
 metadata:
-  name: alertmanager-email-config
+  name: {{ include "restaurant-sentiment.fullname" . }}-alertconfig
   namespace: monitoring
 spec:
   route:
@@ -16,7 +16,7 @@ spec:
           smarthost: {{ .Values.alertmanager.email.smarthost | quote }}
           authUsername: {{ .Values.alertmanager.email.authUsername | quote }}
           authPassword:
-            name: {{ .Values.alertmanager.fullname }}-alertmanager-secret
+            name: {{ include "restaurant-sentiment.fullname" . }}-alertmanager-secret
             key: smtpPassword
           requireTLS: {{ .Values.alertmanager.email.requireTLS }}
           sendResolved: true

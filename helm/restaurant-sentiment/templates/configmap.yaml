@@ -3,4 +3,4 @@ kind: ConfigMap
 metadata:
   name: env-config
 data:
-  MODEL_SERVICE_URL: "http://sentiment-model:8080"
+  MODEL_SERVICE_URL: "http://{{ .Values.modelService.name }}:{{ .Values.modelService.port }}"

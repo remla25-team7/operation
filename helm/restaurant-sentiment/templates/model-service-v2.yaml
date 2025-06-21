@@ -1,21 +1,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: model-service-v2
+  name: {{ .Values.modelService.name }}-v2
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: model-service
+      app: {{ .Values.modelService.name }}
       version: v2
   template:
     metadata:
       labels:
-        app: model-service
+        app: {{ .Values.modelService.name }}
         version: v2
     spec:
       containers:
-        - name: model-service
+        - name: {{ .Values.modelService.name }}
           image: {{ .Values.modelService.image }}
           imagePullPolicy: {{ .Values.modelService.imagePullPolicy | default "IfNotPresent" }}
           ports:
