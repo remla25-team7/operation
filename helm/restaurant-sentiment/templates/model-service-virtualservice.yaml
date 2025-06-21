@@ -1,0 +1,26 @@
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: model-service
+spec:
+  hosts:
+    - model-service
+  http:
+    - match:
+        - headers:
+            x-user-id:
+              exact: "test-user"  # For sticky session simulation
+      route:
+        - destination:
+            host: model-service
+            subset: v2
+          weight: 100
+    - route:
+        - destination:
+            host: model-service
+            subset: v1
+          weight: 90
+        - destination:
+            host: model-service
+            subset: v2
+          weight: 10
