@@ -42,13 +42,7 @@ This repository serves as the main entry point for the **Sentiment Analysis Syst
 
    _Keep the `minikube tunnel` terminal open!_
 
-3. **Create Monitoring Namespace (if not already created)**
-
-   ```bash
-   kubectl create namespace monitoring || true
-   ```
-
-4. **Add Prometheus Helm Repo and Install Monitoring Stack**
+3. **Add Prometheus Helm Repo and Install Monitoring Stack**
 
    ```bash
    helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
@@ -56,11 +50,19 @@ This repository serves as the main entry point for the **Sentiment Analysis Syst
    helm install prometheus prometheus-community/kube-prometheus-stack --namespace monitoring --create-namespace
    ```
 
+4. **Create Monitoring Namespace (if not already created)**
+
+   ```bash
+   kubectl create namespace run1
+   ```
+
+
+
 5. **Deploy the App with Helm**
 
    ```bash
    cd helm/restaurant-sentiment
-   helm upgrade sentiment .
+   helm install run1 . -n run1 --create-namespace
    ```
 
 6. **Apply Ingress and ServiceMonitor**
@@ -77,6 +79,10 @@ This repository serves as the main entry point for the **Sentiment Analysis Syst
    ```
    127.0.0.1 app.local
    ```
+   Or do
+
+   kubectl port-forward -n run1 svc/sentiment-app 5001:5001
+   to access the app via `http://localhost:5001`.
 
 8. **Visit the App**
 
