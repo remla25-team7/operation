@@ -43,6 +43,13 @@ Vagrant.configure("2") do |config|
     end
   end
 
+  config.trigger.after :up do |trigger|
+    trigger.name = "Add dashboard.local to /etc/hosts"
+    trigger.run = {
+      inline: %Q[bash -c 'grep -q "192.168.56.95 dashboard.local" /etc/hosts || echo "192.168.56.95 dashboard.local" | sudo tee -a /etc/hosts']
+    }
+  end
+
   # Define the control node
   config.vm.define "ctrl" do |ctrl|
     ctrl.vm.hostname = "ctrl"
