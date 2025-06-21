@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "restaurant-sentiment.fullname" . }}-env-config
+  labels:
+    app.kubernetes.io/name: {{ include "restaurant-sentiment.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/component: app
+data:
+  # Application configuration which are the actual variables the app uses
+  MODEL_SERVICE_URL: "http://{{ include "restaurant-sentiment.fullname" . }}-model:{{ .Values.modelService.port }}"
+  MODEL_SERVICE_HOST: {{ .Values.modelService.host | quote }}
+  MODEL_SERVICE_PORT: {{ .Values.modelService.port | quote }}
+  
+  # Environment and logging
+  APP_ENV: {{ .Values.app.environment | default "production" | quote }}
+  LOG_LEVEL: {{ .Values.app.logLevel | default "info" | quote }}
+  
+  # Application description
+  APP_NAME: "Restaurant Sentiment Analyzer"
+  APP_DESCRIPTION: "Web application for analyzing restaurant reviews sentiment"
+  
+  # Shared volume configuration
+  SHARED_DATA_PATH: "/mnt/shared"
+  LOGS_PATH: "/mnt/shared/app_logs"

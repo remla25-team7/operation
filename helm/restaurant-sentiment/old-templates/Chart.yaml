@@ -1,0 +1,4 @@
+apiVersion: v2
+name: restaurant-sentiment
+version: 0.1.0
+description: Helm chart for the Restaurant Sentiment Analyzer application

@@ -2,3 +2,14 @@ apiVersion: v2
 name: restaurant-sentiment
 version: 0.1.0
 description: Helm chart for the Restaurant Sentiment Analyzer application
+type: application
+keywords:
+  - sentiment-analysis
+  - restaurant
+  - machine-learning
+home: https://github.com/remla25-team7/operation
+sources:
+  - https://github.com/remla25-team7/operation
+maintainers:
+  - name: REMLA Team 7
+    email: team@remla25.com 

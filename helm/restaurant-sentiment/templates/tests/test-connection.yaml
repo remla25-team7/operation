@@ -1,0 +1,41 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: "{{ include "restaurant-sentiment.fullname" . }}-test-connection"
+  labels:
+    app.kubernetes.io/name: {{ include "restaurant-sentiment.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/component: test
+  annotations:
+    "helm.sh/hook": test
+spec:
+  containers:
+    - name: test-connection
+      image: curlimages/curl:latest
+      command:
+        - /bin/sh
+        - -c
+        - |
+          echo "Testing app service connectivity..."
+          curl -f http://{{ include "restaurant-sentiment.fullname" . }}-app:{{ .Values.app.port }}/
+          if [ $? -eq 0 ]; then
+            echo "App service is accessible"
+          else
+            echo "App service is not accessible"
+            exit 1
+          fi
+          
+          echo "Testing model service /predict endpoint..."
+          RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" -X POST \
+            -H "Content-Type: application/json" \
+            -d '{"review": "This restaurant is amazing!"}' \
+            http://{{ include "restaurant-sentiment.fullname" . }}-model:{{ .Values.modelService.port }}/predict)
+          if [ "$RESPONSE" = "200" ]; then
+            echo "Model service /predict endpoint is accessible"
+          else
+            echo "Model service /predict endpoint is not accessible (HTTP $RESPONSE)"
+            exit 1
+          fi
+          
+          echo "All connectivity tests passed!"
+  restartPolicy: Never 

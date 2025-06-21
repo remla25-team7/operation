@@ -1,0 +1,61 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: "{{ include "restaurant-sentiment.fullname" . }}-test-configmap"
+  labels:
+    app.kubernetes.io/name: {{ include "restaurant-sentiment.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/component: test
+  annotations:
+    "helm.sh/hook": test
+spec:
+  serviceAccountName: {{ include "restaurant-sentiment.fullname" . }}-test-sa
+  containers:
+    - name: test-configmap
+      image: bitnami/kubectl:latest
+      command:
+        - /bin/bash
+        - -c
+        - |
+          echo "Testing ConfigMap creation and values..."
+          
+          # Test app ConfigMap
+          echo "Checking app ConfigMap..."
+          kubectl get configmap {{ include "restaurant-sentiment.fullname" . }}-env-config
+          if [ $? -eq 0 ]; then
+            echo "App ConfigMap exists"
+            
+            # Check key values
+            MODEL_SERVICE_URL=$(kubectl get configmap {{ include "restaurant-sentiment.fullname" . }}-env-config -o jsonpath='{.data.MODEL_SERVICE_URL}')
+            if [[ "$MODEL_SERVICE_URL" == "http://{{ include "restaurant-sentiment.fullname" . }}-model:{{ .Values.modelService.port }}" ]]; then
+              echo "MODEL_SERVICE_URL is correct: $MODEL_SERVICE_URL"
+            else
+              echo "MODEL_SERVICE_URL is incorrect: $MODEL_SERVICE_URL"
+              exit 1
+            fi
+          else
+            echo "App ConfigMap does not exist"
+            exit 1
+          fi
+          
+          # Test model ConfigMap
+          echo "Checking model ConfigMap..."
+          kubectl get configmap {{ include "restaurant-sentiment.fullname" . }}-model-env-config
+          if [ $? -eq 0 ]; then
+            echo "Model ConfigMap exists"
+            
+            # Check key values
+            MODEL_URL=$(kubectl get configmap {{ include "restaurant-sentiment.fullname" . }}-model-env-config -o jsonpath='{.data.MODEL_URL}')
+            if [[ "$MODEL_URL" == *"latest"* ]]; then
+              echo "MODEL_URL points to latest: $MODEL_URL"
+            else
+              echo "MODEL_URL does not point to latest: $MODEL_URL"
+              exit 1
+            fi
+          else
+            echo "Model ConfigMap does not exist"
+            exit 1
+          fi
+          
+          echo "All ConfigMap tests passed!"
+  restartPolicy: Never 
