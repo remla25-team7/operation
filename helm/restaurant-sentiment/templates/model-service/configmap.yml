@@ -22,7 +22,7 @@ data:
   MODEL_VERSION: {{ .Values.modelService.modelVersion | default "latest" | quote }}
   
   # Cache and storage configuration
-  MODEL_CACHE_PATH: "/mnt/shared/model_cache"
+  MODEL_CACHE_PATH: "/vagrant/shared/model_cache"
   ARTIFACTS_CACHE_PATH: "/tmp/artefacts"
   
   # API configuration

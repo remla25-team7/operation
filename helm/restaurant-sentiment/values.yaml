@@ -73,5 +73,5 @@ alertmanager:
     authUsername: 'from-mail@gmail.com'
     requireTLS: true
 
-# Shared volume path (hostPath)
-sharedVolumePath: /mnt/shared 
+# Shared volume path (hostPath) - VirtualBox shared folder
+sharedVolumePath: /vagrant/shared 

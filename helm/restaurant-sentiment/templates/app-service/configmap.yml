@@ -21,5 +21,5 @@ data:
   APP_DESCRIPTION: "Web application for analyzing restaurant reviews sentiment"
   
   # Shared volume configuration
-  SHARED_DATA_PATH: "/mnt/shared"
-  LOGS_PATH: "/mnt/shared/app_logs"
+  SHARED_DATA_PATH: "/vagrant/shared"
+  LOGS_PATH: "/vagrant/shared/app_logs"

@@ -35,7 +35,7 @@ spec:
                 name: {{ include "restaurant-sentiment.fullname" . }}-model-secret
           volumeMounts:
             - name: shared-volume
-              mountPath: /mnt/shared
+              mountPath: /vagrant/shared
       volumes:
         - name: shared-volume
           hostPath:
