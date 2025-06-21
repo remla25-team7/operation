@@ -181,3 +181,6 @@ Approved PR: https://github.com/remla25-team7/lib-version/pull/5 (related to A1)
 # Week 9:
 -- Seyidali Bulut --
 Created PR: https://github.com/remla25-team7/operation/pull/53 (related to A5)
+
+--Moegiez Bhatti --
+Created PR: https://github.com/remla25-team7/operation/pull/54
