@@ -177,3 +177,7 @@ Created PR: https://github.com/remla25-team7/app/pull/7 (related A1)
 Created PR: https://github.com/remla25-team7/operation/pull/48 (related to A1)
 Created PR: https://github.com/remla25-team7/model-service/pull/7 (related A1)
 Approved PR: https://github.com/remla25-team7/lib-version/pull/5 (related to A1)
+
+# Week 9:
+-- Seyidali Bulut --
+Created PR: https://github.com/remla25-team7/operation/pull/53 (related to A5)
