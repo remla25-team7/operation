@@ -182,7 +182,10 @@ This repository serves as the main entry point for the **Sentiment Analysis Syst
 
 ```bash
 git clone <repo-url> && cd <repo-dir>
-vagrant up --provision
+
+echo "192.168.56.95 dashboard.local" | sudo tee -a /etc/hosts
+vagrant up
+vagrant provision
 ```
 
 #### 2. Load kubeconfig to all your terminal sessions
@@ -215,7 +218,7 @@ kubectl -n kubernetes-dashboard create token admin-user
 
 ##### 3.1 Kubernetes Dashboard port-forwarding
 
-Run the Kubernetes Dashboard and paste the token in the browser to login. https://localhost:8443
+If for some reason you cannot access the dashboard by following the above steps, you can port-foward it, but we recommend setting up the direct access.
 
 ```bash
 kubectl -n kubernetes-dashboard port-forward svc/kubernetes-dashboard-kong-proxy 8443:443
