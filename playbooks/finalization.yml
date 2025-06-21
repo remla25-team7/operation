@@ -103,6 +103,13 @@
         executable: /bin/bash
       become_user: vagrant
 
+    - name: Wait for Ingress Controller to be ready
+      shell: kubectl wait --for=condition=ready pod --all \
+        -n {{ ingress_namespace }} --timeout=180s
+      args:
+        executable: /bin/bash
+      become_user: vagrant
+
     - name: Verify Ingress Service has an external IP
       shell: kubectl -n {{ ingress_namespace }} get svc {{ ingress_release }}-controller -o wide
       register: ingress_svc
@@ -133,6 +140,13 @@
         helm upgrade --install {{ dashboard_release }} kubernetes-dashboard/kubernetes-dashboard \
           --namespace {{ dashboard_namespace }} --create-namespace \
           --wait
+      args:
+        executable: /bin/bash
+      become_user: vagrant
+
+    - name: Wait for Dashboard pods to be ready
+      shell: kubectl wait --for=condition=ready pod --all \
+        -n {{ dashboard_namespace }} --timeout=180s
       args:
         executable: /bin/bash
       become_user: vagrant
@@ -205,6 +219,17 @@
           }]'
       become_user: vagrant
 
+    - name: Verify Dashboard Ingress is created
+      shell: kubectl get ingress kubernetes-dashboard -n kubernetes-dashboard
+      register: dashboard_ingress
+      become_user: vagrant
+
+    - name: Show Dashboard Ingress status
+      debug:
+        var: dashboard_ingress.stdout_lines
+
+      become_user: vagrant
+
     - name: Dashboard setup complete
       debug:
         msg: |
@@ -215,6 +240,101 @@
 
           Then add this entry to your /etc/hosts so you can browse via HTTPS:
 
-            192.168.56.90  {{ ingress_host }}
+            192.168.56.95  {{ ingress_host }}
 
           Finally, open https://{{ ingress_host }}/ in your browser and paste the token to log in.
+
+- name: Install Istio
+  hosts: ctrl
+  become: yes
+  tasks:
+    - name: Install Istio into the cluster
+      shell: istioctl install -y -f /vagrant/istio-operator.yaml
+      become_user: vagrant
+
+    - name: Wait for Istio pods to be ready
+      shell: kubectl wait --for=condition=ready pod --all -n istio-system --timeout=180s
+      args:
+        executable: /bin/bash
+      become_user: vagrant
+
+    - name: Get Istio Ingress Gateway IP
+      shell: kubectl get svc istio-ingressgateway -n istio-system -o jsonpath='{.status.loadBalancer.ingress[0].ip}'
+      register: istio_gateway_ip
+      become_user: vagrant
+
+    - name: Show Istio Gateway IP
+      debug:
+        msg: |
+          Istio has been successfully installed!
+          Istio Ingress Gateway IP: {{ istio_gateway_ip.stdout }}
+          
+          You can now use Istio Gateway and VirtualService resources for traffic management.
+
+- name: Final Verification
+  hosts: ctrl
+  become: yes
+  tasks:
+    - name: Verify all LoadBalancer services have external IPs
+      shell: kubectl get svc --all-namespaces | grep LoadBalancer
+      register: lb_services
+      become_user: vagrant
+
+    - name: Show LoadBalancer services
+      debug:
+        var: lb_services.stdout_lines
+
+    - name: Verify MetalLB is working
+      shell: kubectl get pods -n metallb-system
+      register: metallb_status
+      become_user: vagrant
+
+    - name: Show MetalLB status
+      debug:
+        var: metallb_status.stdout_lines
+
+    - name: Verify Nginx Ingress is working
+      shell: kubectl get pods -n ingress-nginx
+      register: nginx_status
+      become_user: vagrant
+
+    - name: Show Nginx Ingress status
+      debug:
+        var: nginx_status.stdout_lines
+
+    - name: Verify Istio is working
+      shell: kubectl get pods -n istio-system
+      register: istio_status
+      become_user: vagrant
+
+    - name: Show Istio status
+      debug:
+        var: istio_status.stdout_lines
+
+    - name: Verify Dashboard is working
+      shell: kubectl get pods -n kubernetes-dashboard
+      register: dashboard_status
+      become_user: vagrant
+
+    - name: Show Dashboard status
+      debug:
+        var: dashboard_status.stdout_lines
+
+    - name: Final success message
+      debug:
+        msg: |
+          
+          Your Kubernetes cluster is now fully configured with:
+          
+          * MetalLB providing fixed IPs (192.168.56.90-192.168.56.99)
+          * Nginx Ingress Controller with fixed IP (192.168.56.95)
+          * Istio Gateway with fixed IP (192.168.56.90)
+          * Kubernetes Dashboard accessible via https://dashboard.local
+          * HTTPS Ingress Controller with self-signed certificates
+          
+          All components are ready for production workloads.
+          
+          To access the dashboard:
+          1. Add to /etc/hosts: 192.168.56.95 dashboard.local
+          2. Run: kubectl -n kubernetes-dashboard create token admin-user
+          3. Visit: https://dashboard.local

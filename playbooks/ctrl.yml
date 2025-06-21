@@ -116,7 +116,7 @@
         path: /tmp/kube-flannel.yml
         state: absent
     
-    # Step 23: Install Istio
+    # Step 23: Install Istio CLI tools only (not the cluster installation)
     - name: Download Istio 1.25.2
       ansible.builtin.get_url:
         url: https://github.com/istio/istio/releases/download/1.25.2/istio-1.25.2-linux-arm64.tar.gz
