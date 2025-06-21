@@ -28,3 +28,6 @@ alertmanager:
     smarthost: 'smtp.gmail.com:587'
     authUsername: 'from-mail@gmail.com'
     requireTLS: true
+
+istio:
+  enabled: false
