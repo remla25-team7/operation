@@ -39,19 +39,21 @@ helm install restaurant-sentiment ./helm/restaurant-sentiment \
 You can run multiple copies of the same application in your cluster (e.g., one for development, one for production). Here's how:
 
 **Step 1: Install for different environments**
+
 ```bash
 # Install development version
 helm install dev ./helm/restaurant-sentiment \
   --set app.host=dev-app.local \
   --set modelService.host=dev-model.local
 
-# Install production version  
+# Install production version
 helm install prod ./helm/restaurant-sentiment \
   --set app.host=prod-app.local \
   --set modelService.host=prod-model.local
 ```
 
 **Step 2: Add hostnames to your computer's hosts file**
+
 ```bash
 # Add these lines to /etc/hosts (replace 192.168.56.95 with your actual ingress IP)
 192.168.56.95 dev-app.local dev-model.local
@@ -59,11 +61,13 @@ helm install prod ./helm/restaurant-sentiment \
 ```
 
 **Step 3: Access your applications**
+
 - Development: Open `http://dev-app.local` in your browser
 - Production: Open `http://prod-app.local` in your browser
 - Model API: Use `http://dev-model.local/` or `http://prod-model.local/` for predictions
 
 **What happens:**
+
 - You get two completely separate applications running
 - Each has its own pods, services, and configuration (with names like `dev-restaurant-sentiment-app`, `prod-restaurant-sentiment-model`, etc.)
 - They don't interfere with each other
@@ -73,21 +77,21 @@ helm install prod ./helm/restaurant-sentiment \
 
 ### Values
 
-| Parameter | Description | Default |
-|-----------|-------------|---------|
-| `app.image` | App service image | `ghcr.io/remla25-team7/app:latest` |
-| `app.port` | App service port | `5001` |
-| `app.host` | App ingress host | `app.local` |
-| `modelService.image` | Model service image | `ghcr.io/remla25-team7/model-service:latest` |
-| `modelService.port` | Model service port | `5000` |
-| `modelService.host` | Model ingress host | `model.local` |
-| `monitoring.enabled` | Enable monitoring | `true` |
-| `sharedVolumePath` | HostPath volume path | `/mnt/shared` |
+| Parameter            | Description          | Default                                      |
+| -------------------- | -------------------- | -------------------------------------------- |
+| `app.image`          | App service image    | `ghcr.io/remla25-team7/app:latest`           |
+| `app.port`           | App service port     | `5001`                                       |
+| `app.host`           | App ingress host     | `app.local`                                  |
+| `modelService.image` | Model service image  | `ghcr.io/remla25-team7/model-service:latest` |
+| `modelService.port`  | Model service port   | `5000`                                       |
+| `modelService.host`  | Model ingress host   | `model.local`                                |
+| `monitoring.enabled` | Enable monitoring    | `true`                                       |
+| `sharedVolumePath`   | HostPath volume path | `/mnt/shared`                                |
 
 ### Access Points
 
 - **App Service**: `http://app.local/`
-- **Model Service**: `http://model.local/predict`
+- **Model Service**: `http://model.local/predict` Accessible only internally
 - **Metrics**: `http://app.local/metrics`
 
 ## Architecture
@@ -133,21 +137,25 @@ helm uninstall restaurant-sentiment
 ## Troubleshooting
 
 ### Check Pod Status
+
 ```bash
 kubectl get pods -l app.kubernetes.io/instance=restaurant-sentiment
 ```
 
 ### Check Services
+
 ```bash
 kubectl get svc -l app.kubernetes.io/instance=restaurant-sentiment
 ```
 
 ### Check Ingress
+
 ```bash
 kubectl get ingress -l app.kubernetes.io/instance=restaurant-sentiment
 ```
 
 ### View Logs
+
 ```bash
 kubectl logs -l app.kubernetes.io/component=app
 kubectl logs -l app.kubernetes.io/component=model
@@ -202,4 +210,4 @@ curl -X POST -H "Content-Type: application/json" \
 ```bash
 # Run automated tests
 helm test <release-name>
-``` 
+```
