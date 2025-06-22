@@ -1,0 +1,30 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "restaurant-sentiment.fullname" . }}-model-env-config
+  labels:
+    app.kubernetes.io/name: {{ include "restaurant-sentiment.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/component: model
+data:
+  MODEL_URL: {{ .Values.modelService.modelUrl | default "https://github.com/remla25-team7/model-training/releases/latest/download/model.pkl" | quote }}
+  VECTORIZER_URL: {{ .Values.modelService.vectorizerUrl | default "https://github.com/remla25-team7/model-training/releases/latest/download/vectorizer.pkl" | quote }}
+  PORT: {{ .Values.modelService.port | quote }}
+  
+  # Environment and logging
+  APP_ENV: {{ .Values.modelService.environment | default "production" | quote }}
+  LOG_LEVEL: {{ .Values.modelService.logLevel | default "info" | quote }}
+  
+  # Model service description
+  MODEL_SERVICE_NAME: "Sentiment Analysis Model"
+  
+  # Model service version
+  MODEL_VERSION: {{ .Values.modelService.modelVersion | default "latest" | quote }}
+  
+  # Cache and storage configuration
+  MODEL_CACHE_PATH: "/vagrant/shared/model_cache"
+  ARTIFACTS_CACHE_PATH: "/tmp/artefacts"
+  
+  # API configuration
+  API_TIMEOUT: {{ .Values.modelService.apiTimeout | default "30" | quote }}
+  MAX_REQUEST_SIZE: {{ .Values.modelService.maxRequestSize | default "16MB" | quote }} 

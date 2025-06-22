@@ -44,9 +44,9 @@ Vagrant.configure("2") do |config|
   end
 
   config.trigger.after :up do |trigger|
-    trigger.name = "Add dashboard.local to /etc/hosts"
+    trigger.name = "Add dashboard.local model.local app.local to /etc/hosts"
     trigger.run = {
-      inline: %Q[bash -c 'grep -q "192.168.56.95 dashboard.local" /etc/hosts || echo "192.168.56.95 dashboard.local" | sudo tee -a /etc/hosts']
+      inline: %Q[bash -c 'grep -q "192.168.56.95 dashboard.local app.local model.local" /etc/hosts || echo "192.168.56.95 dashboard.local app.local model.local" | sudo tee -a /etc/hosts']
     }
   end
 

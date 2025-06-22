@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "restaurant-sentiment.fullname" . }}-app
+  labels:
+    app.kubernetes.io/name: {{ include "restaurant-sentiment.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/component: app
+spec:
+  replicas: {{ .Values.app.replicas | default 1 }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "restaurant-sentiment.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+      app.kubernetes.io/component: app
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ include "restaurant-sentiment.name" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+        app.kubernetes.io/component: app
+    spec:
+      containers:
+        - name: app
+          image: {{ .Values.app.image }}
+          imagePullPolicy: {{ .Values.app.imagePullPolicy | default "IfNotPresent" }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.app.port }}
+              protocol: TCP
+          env:
+            - name: MODEL_SERVICE_HOST
+              value: {{ .Values.modelService.host | quote }}
+            - name: MODEL_SERVICE_PORT
+              value: {{ .Values.modelService.port | quote }}
+          envFrom:
+            - configMapRef:
+                name: {{ include "restaurant-sentiment.fullname" . }}-env-config
+          volumeMounts:
+            - name: shared-volume
+              mountPath: /vagrant/shared
+            - name: model-credentials
+              mountPath: /app/secrets
+              readOnly: true
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: false 
+          
+      volumes:  
+        - name: shared-volume
+          hostPath:
+            path: {{ .Values.sharedVolumePath }}
+            type: Directory
+        - name: model-credentials
+          secret:
+            secretName: restaurant-sentiment-shared-secret
+            items:
+              - key: model_credentials
+                path: model_credentials
