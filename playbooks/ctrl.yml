@@ -119,14 +119,14 @@
     # Step 23: Install Istio CLI tools only (not the cluster installation)
     - name: Download Istio 1.25.2
       ansible.builtin.get_url:
-        url: https://github.com/istio/istio/releases/download/1.25.2/istio-1.25.2-linux-arm64.tar.gz
-        dest: /home/vagrant/istio-1.25.2-linux-arm64.tar.gz
+        url: https://github.com/istio/istio/releases/download/1.25.2/istio-1.25.2-linux-amd64.tar.gz
+        dest: /home/vagrant/istio-1.25.2-linux-amd64.tar.gz
         mode: '0644'
         force: no
 
     - name: Unpack Istio archive
       ansible.builtin.unarchive:
-        src: /home/vagrant/istio-1.25.2-linux-arm64.tar.gz
+        src: /home/vagrant/istio-1.25.2-linux-amd64.tar.gz
         dest: /home/vagrant/
         remote_src: yes
 
