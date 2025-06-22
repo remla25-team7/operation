@@ -32,12 +32,13 @@ spec:
             - configMapRef:
                 name: {{ include "restaurant-sentiment.fullname" . }}-model-env-config
             - secretRef:
-                name: {{ include "restaurant-sentiment.fullname" . }}-model-secret
+                name: {{ include "restaurant-sentiment.fullname" . }}-shared-secret
+                
           volumeMounts:
             - name: shared-volume
               mountPath: /vagrant/shared
             - name: model-credentials
-              mountPath: /run/secrets
+              mountPath: /app/secrets
               readOnly: true
           securityContext:
             allowPrivilegeEscalation: false

@@ -40,13 +40,13 @@ spec:
             - name: shared-volume
               mountPath: /vagrant/shared
             - name: model-credentials
-              mountPath: /run/secrets
+              mountPath: /app/secrets
               readOnly: true
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: false 
           
-      volumes:
+      volumes:  
         - name: shared-volume
           hostPath:
             path: {{ .Values.sharedVolumePath }}
