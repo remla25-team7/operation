@@ -28,13 +28,13 @@ spec:
                 port:
                   number: {{ .Values.app.port }}
 
-    - host: {{ .Values.modelService.host }}
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: {{ include "restaurant-sentiment.fullname" . }}-model
-                port:
-                  number: {{ .Values.modelService.port }} 
+    # - host: {{ .Values.modelService.host }}
+    #   http:
+    #     paths:
+    #       - path: /
+    #         pathType: Prefix
+    #         backend:
+    #           service:
+    #             name: {{ include "restaurant-sentiment.fullname" . }}-model
+    #             port:
+    #               number: {{ .Values.modelService.port }} 
