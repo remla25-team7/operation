@@ -17,13 +17,6 @@ app:
       memory: "256Mi"
       cpu: "200m"
 
-  # Secrets configuration
-  apiKey: "restaurant_sentiment_api_key_2024"
-  modelServiceApiKey: "model_service_api_key"
-  dbPassword: "secure_db_password_2024"
-  externalApiSecret: "external_api_secret_key"
-
-
 modelService:
   image: ghcr.io/remla25-team7/model-service:latest
   imagePullPolicy: Always
@@ -51,24 +44,21 @@ modelService:
       memory: "1Gi"
       cpu: "500m"
 
-  apiKey: "thisIsTheSecret"
-  modelDownloadToken: "github_token_for_model_download"
-  modelEncryptionKey: "model_encryption_key_2024"
-
 monitoring:
   enabled: true
   scrapeInterval: 15s
   appRequestRateThreshold: 15
   appRequestRateDuration: 2m
 
+# AlertManager configuration for email alerts
 alertmanager:
   enabled: true
   fullname: kube-prometheus-stack
   email:
-    to: 'to-mail@gmail.com'
-    from: 'from-mail@gmail.com'
+    to: 'cristiancomend@gmail.com'
+    from: 'cristiancomend@gmail.com'
     smarthost: 'smtp.gmail.com:587'
-    authUsername: 'from-mail@gmail.com'
+    authUsername: 'cristiancomend@gmail.com'
+    authPassword: "aqdvzzifbctdtjjq"
     requireTLS: true
-
 sharedVolumePath: /vagrant/shared

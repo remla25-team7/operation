@@ -56,8 +56,6 @@ This repository serves as the main entry point for the **Sentiment Analysis Syst
    kubectl create namespace run1
    ```
 
-
-
 5. **Deploy the App with Helm**
 
    ```bash
@@ -79,6 +77,7 @@ This repository serves as the main entry point for the **Sentiment Analysis Syst
    ```
    127.0.0.1 app.local
    ```
+
    Or do
 
    kubectl port-forward -n run1 svc/sentiment-app 5001:5001
