@@ -1,10 +1,10 @@
 apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
 metadata:
-  name: model-service
+  name: {{ include "restaurant-sentiment.fullname" . }}-model-service
 spec:
   hosts:
-    - model-service
+    - {{ include "restaurant-sentiment.fullname" . }}-model
   http:
     - match:
         - headers:
@@ -12,15 +12,15 @@ spec:
               exact: "test-user"
       route:
         - destination:
-            host: model-service
+            host: {{ include "restaurant-sentiment.fullname" . }}-model
             subset: v2
           weight: 100
     - route:
         - destination:
-            host: model-service
+            host: {{ include "restaurant-sentiment.fullname" . }}-model
             subset: v1
           weight: 90
         - destination:
-            host: model-service
+            host: {{ include "restaurant-sentiment.fullname" . }}-model
             subset: v2
           weight: 10
