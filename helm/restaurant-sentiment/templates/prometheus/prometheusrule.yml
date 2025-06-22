@@ -8,14 +8,14 @@ spec:
   groups:
     - name: app.rules
       rules:
-        - alert: RequestCountReached
-          expr: sentiment_app_requests_total >= 5
-          for: 10s  # Optional: ensures value stays >= 5 for at least 10s
+        - alert: HighRequestRate
+          expr: rate(sentiment_app_requests_total[1m]) > 1
+          for: 2m
           labels:
             severity: warning
           annotations:
-            summary: "Total requests reached threshold"
-            description: "The sentiment app has received 5 or more total requests."
+            summary: "High request rate detected"
+            description: "More than 1 request/sec to sentiment app in the last 10 seconds."
 
 
 # apiVersion: monitoring.coreos.com/v1

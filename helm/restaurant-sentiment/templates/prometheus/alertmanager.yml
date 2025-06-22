@@ -21,3 +21,4 @@ spec:
           requireTLS: {{ .Values.alertmanager.email.requireTLS }}
           sendResolved: true
 {{- end }}
+
