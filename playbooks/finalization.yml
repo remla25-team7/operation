@@ -143,14 +143,16 @@
         executable: /bin/bash
       become_user: vagrant
 
-    - name: Wait for each currently existing dashboard pod to be ready
+    - name: Wait for dashboard pods to be ready
       shell: |
-        for pod in $(kubectl get pods -n {{ dashboard_namespace }} -o name); do
-          kubectl wait --for=condition=ready $pod -n {{ dashboard_namespace }} --timeout=180s || exit 1
-        done
+        kubectl wait --for=condition=ready pod --all -n {{ dashboard_namespace }} --timeout=300s
       args:
         executable: /bin/bash
       become_user: vagrant
+      retries: 3
+      delay: 10
+      register: dashboard_wait_result
+      until: dashboard_wait_result is succeeded
 
     - name: Write Dashboard admin-user SA & ClusterRoleBinding manifest
       copy:

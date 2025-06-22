@@ -50,7 +50,7 @@ spec:
             type: Directory
         - name: model-credentials
           secret:
-            secretName: restaurant-sentiment-shared-secret
+            secretName: {{ include "restaurant-sentiment.fullname" . }}-shared-secret
             items:
               - key: model_credentials
                 path: model_credentials
