@@ -1,90 +1,70 @@
-# Extension Proposal: Decouple Model from Docker Image
+# Extension Proposal: Automated Semantic Versioning
 
 ## Identified Shortcoming
 
-Currently, our deployment strategy tightly couples the trained ML models with the model service container image. Each time a new model is trained, we are required to rebuild and release a new Docker image for the model service that includes the updated `model.pkl` and `vectorizer.pkl` files. This approach introduces significant workload in our release process and violates the principle of separation of concerns.
+Our current release process relies on **manual version tagging** and **ad-hoc changelog updates**. This introduces inconsistencies, increases the risk of human error and creates friction in delivering new features or bug fixes.
 
-### Effects of the Shortcoming
+### Current Pain Points
 
-- **Slows iteration cycles**: Retraining a model requires a full image build and redeployment.
-- **Hinders experimentation**: Canary or shadow testing of model variants is difficult without image duplication.
-- **Reduces maintainability**: Makes it harder to test, deploy, or roll back model versions independently.
-- **Waste of CI resources**: Rebuilding the entire image is unnecessary if only the model changes.
-
----
+- **Manual tagging** leads to versioning mistakes or skipped tags.  
+- **Inconsistent changelogs** reduce traceability and transparency.  
 
 ## Proposed Extension
 
-We propose to unlink the model artifact from the model service image by dynamically downloading the model at runtime. Instead of embedding the model in the container image, we will configure the model service to fetch it from a remote source, such as a Google Drive via DVC.
+Adopt a **semantic-release workflow** to automate version management and changelog maintenance across all services:
 
-### Key Changes
+1. **Commit Convention Enforcement**  
+   Standardize commit messages using prefixes (e.g., `feat:`, `fix:`, `chore:`) to clearly indicate the type of change.
 
-- Add support for a `MODEL_URL` environment variable in `app.py` to download the model at runtime.
-- Implement local downloading: if the model already exists locally and matches the desired version, skip downloading.
-- Modify the Dockerfile to exclude model files from the image.
+2. **Automated Version Bumping**  
+   Integrate a semantic-release tool that:
+   - Analyzes commit history since the last release.  
+   - Determines the appropriate version bump (`major`, `minor`, or `patch`).  
+   - Updates the project’s version metadata automatically.
 
-### Updated Architecture
+3. **Changelog Generation**  
+   Configure the release workflow to:
+   - Generate human-readable changelog entries based on commit messages.  
+   - Append entries to a central `CHANGELOG.md` with proper date and version headings.
 
-#### Before:
-
-Docker Image: model service
-```
-├── app.py
-├── model.pkl ← hardcoded into image
-└── vectorizer.pkl ← hardcoded into image
-
-```
-#### After:
-
-Docker Image: model service
-```
-├── app.py
-└── ⤵️ Downloads model.pkl and vectorizer.pkl from MODEL_URL on startup
-↳ Caches locally in /app/models
-```
-
----
-
-## References
-
-- [MLflow Model Registry](https://mlflow.org/docs/latest/model-registry.html) – Industry-standard for decoupling models from services.
-- [Google’s ML Test Score](https://research.google/pubs/the-ml-test-score-a-rubric-for-ml-production-readiness-and-technical-debt-reduction/) – Recommends separating model training and serving.
-- [Best Practices for Serving ML Models – O’Reilly](https://www.oreilly.com/library/view/machine-learning-model/9781803249902/) – "Model loading should be dynamic and externally configurable."
-
----
-
-## Evaluation and Validation
-
-We will evaluate the success of this extension using the following criteria:
-
-### Metrics to Track
-
-- **Mean time to deploy a new model** (from training to availability in production).
-- **Container startup time** (with vs. without local cache).
-- **Failure rate of model loading** in deployment logs.
-
-### Experiment
-
-We will run an experiment comparing the current image service approach and the new dynamic loading version by:
-
-1. Training and releasing a new model via our existing `train_publish_model.yml` pipeline.
-2. Deploying the updated model using only a change to the `MODEL_URL` environment variable.
-3. Measuring the time and effort difference.
-4. Monitoring metrics in Prometheus and observing system logs for model loading behavior.
-
----
+4. **CI Pipeline Integration**  
+   Add a dedicated release job in the CI pipeline that:
+   - Runs on each merge to the main branch.  
+   - Fetches full commit history.  
+   - Executes the semantic-release tool to update version metadata and changelog.  
+   - Creates a new Git tag and publishes a formal release artifact.
 
 ## Benefits
 
-This refactoring brings the following advantages:
+- **Frictionless releases**—no manual steps for versioning or changelog updates.  
+- **Consistent metadata**—tags, versions, and changelogs are always aligned.  
+- **Enhanced visibility**—releases are accompanied by clear, automatic release notes.  
+- **Reduced errors**—semantic rules prevent mislabeling and skipped versions.  
+- **Improved onboarding**—contributors follow a simple commit convention.  
 
-- Speeds up model release cycles and promotes experimentation.
-- Prepares the system for future additions like model registry integration or automated rollback.
----
+## Evaluation Plan
+
+To assess the impact of this extension, we will compare the manual and automated release processes using metrics such as:
+
+| Metric                         | Manual Process | Automated Process |
+|--------------------------------|----------------|-------------------|
+| Average time to release        | X minutes      | Y minutes         |
+| Changelog completeness         | Variable       | Always generated  |
+| Release errors (tag mismatch)  | Occasional     | None expected     |
+| Release frequency              | Lower          | Higher            |
+
+A significant reduction in manual steps and errors, along with increased release cadence, will validate the success of this improvement.
+
+## Related Tools and Industry Practice
+
+- [Conventional Commits](https://www.conventionalcommits.org/)  
+- [Python Semantic Release](https://python-semantic-release.readthedocs.io/)  
 
 ## Limitations
 
-- Requires model hosting with reliable access and version control.
-- Slight increase in container startup time because of caching.
-- A model integrity check should be considered to ensure the downloaded model is correct.
+- Requires discipline in commit messaging.  
+- May need an initial cleanup of historical releases.  
+
 ---
+
+Implementing this semantic-release extension will streamline our workflow, improve reliability and support rapid and reproducible deployments.
