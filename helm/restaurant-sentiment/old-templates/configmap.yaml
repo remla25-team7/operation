@@ -1,6 +1,0 @@
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: env-config
-data:
-  MODEL_SERVICE_URL: "http://sentiment-model:8080"

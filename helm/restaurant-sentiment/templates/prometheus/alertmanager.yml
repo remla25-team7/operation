@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ .Release.Name }}-alertmanager
+  namespace: {{ .Values.prometheus.namespace | default "monitoring" }}
+type: Opaque
+stringData:
+  alertmanager.yaml: |
+    global:
+      smtp_smarthost: '{{ .Values.alertmanager.smtpHost }}'
+      smtp_from: '{{ .Values.alertmanager.smtpFrom }}'
+      smtp_auth_username: '{{ .Values.alertmanager.smtpUsername }}'
+      smtp_auth_password: '{{ .Values.alertmanager.smtpPassword }}'
+
+    route:
+      receiver: email-alert
+      group_wait: 10s
+      group_interval: 1m
+      repeat_interval: 1h
+
+    receivers:
+      - name: email-alert
+        email_configs:
+          - to: '{{ .Values.alertmanager.smtpTo }}'
+            send_resolved: true
+            require_tls: true
