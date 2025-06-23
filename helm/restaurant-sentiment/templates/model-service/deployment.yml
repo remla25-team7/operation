@@ -19,6 +19,7 @@ spec:
         app.kubernetes.io/name: {{ include "restaurant-sentiment.name" . }}
         app.kubernetes.io/instance: {{ .Release.Name }}
         app.kubernetes.io/component: model
+        version: {{ .Values.modelService.version | quote }}
     spec:
       containers:
         - name: model-service
@@ -33,21 +34,14 @@ spec:
                 name: {{ include "restaurant-sentiment.fullname" . }}-model-env-config
             - secretRef:
                 name: {{ include "restaurant-sentiment.fullname" . }}-shared-secret
-                
           volumeMounts:
-            - name: shared-volume
-              mountPath: /vagrant/shared
             - name: model-credentials
               mountPath: /app/secrets
               readOnly: true
           securityContext:
             allowPrivilegeEscalation: false
-            readOnlyRootFilesystem: false 
+            readOnlyRootFilesystem: false
       volumes:
-        - name: shared-volume
-          hostPath:
-            path: {{ .Values.sharedVolumePath }}
-            type: Directory
         - name: model-credentials
           secret:
             secretName: {{ include "restaurant-sentiment.fullname" . }}-shared-secret

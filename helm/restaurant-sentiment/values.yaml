@@ -17,23 +17,21 @@ app:
       memory: "256Mi"
       cpu: "200m"
 
-
 modelService:
   image: ghcr.io/remla25-team7/model-service:latest
   imagePullPolicy: Always
   port: 5000
   host: model.local
   name: sentiment-model
+  version: "v1"                     # 🔧 Added: for Istio routing
   modelVersion: "latest"
   environment: "production"
   logLevel: "info"
   replicas: 1
   secret:
     modelCredentials: "thisIsTheSecret="
-
   modelUrl: "https://github.com/remla25-team7/model-training/releases/latest/download/model.pkl"
   vectorizerUrl: "https://github.com/remla25-team7/model-training/releases/latest/download/vectorizer.pkl"
-
   apiTimeout: "30"
   maxRequestSize: "16MB"
 

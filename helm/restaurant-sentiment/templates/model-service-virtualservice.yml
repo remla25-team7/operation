@@ -4,7 +4,9 @@ metadata:
   name: {{ include "restaurant-sentiment.fullname" . }}-model-service
 spec:
   hosts:
-    - {{ include "restaurant-sentiment.fullname" . }}-model
+    - "*"
+  gateways:
+    - {{ include "restaurant-sentiment.fullname" . }}-gateway
   http:
     - match:
         - headers:
