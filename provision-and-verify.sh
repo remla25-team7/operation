@@ -67,3 +67,6 @@ echo "    Get token by running:"
 echo "       kubectl -n kubernetes-dashboard create token admin-user"
 
 echo "Provisioning and verification complete."
+
+echo "  !!To use kubectl or helm in your shell, run this:"
+echo "   export KUBECONFIG=$(pwd)/kubeconfig"
