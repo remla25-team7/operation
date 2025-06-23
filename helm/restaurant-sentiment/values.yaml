@@ -47,6 +47,14 @@ modelService:
 
 prometheus:
   namespace: "monitoring"
+  ingress:
+    enabled: true
+    host: prometheus.local
+
+grafana:
+  ingress:
+    enabled: true
+    host: grafana.local
 
 monitoring:
   enabled: true
