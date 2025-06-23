@@ -186,4 +186,22 @@ Approved PR: https://github.com/remla25-team7/operation/pull/56 (related to A5)
 
 --Moegiez Bhatti --
 Created PR: https://github.com/remla25-team7/operation/pull/54 (a5)
+Created PR: https://github.com/remla25-team7/model-training/pull/14 (related to A4)
+Approved PR: https://github.com/remla25-team7/operation/pull/55 (related to a5)
+
+-- Razvan Loghin --
+Created PR: https://github.com/remla25-team7/operation/pull/51 (related to A2) \
+Created PR: https://github.com/remla25-team7/app/pull/8 (related to A1) \
+Approved PR: https://github.com/remla25-team7/operation/pull/53 (related to A5)
+
+# Week 10:
+-- Razvan Loghin --
+Created PR: https://github.com/remla25-team7/lib-ml/pull/5 (related to A1) \
+Created PR: https://github.com/remla25-team7/model-service/pull/8 (related to A1)
+
+
+--Moegiez Bhatti --
+Approved Pr: https://github.com/remla25-team7/operation/pull/62 \
+Approved Pr: https://github.com/remla25-team7/lib-ml/pull/5 \ 
+
 

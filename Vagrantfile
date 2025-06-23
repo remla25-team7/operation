@@ -96,14 +96,14 @@ Vagrant.configure("2") do |config|
     ansible.inventory_path = "inventory.cfg"
   end
 
-  # FINALIZE (MetalLB, Ingress, Dashboard)
-  config.vm.provision "ansible_finalize", type: "ansible" do |ansible|
-    ansible.playbook       = "playbooks/finalization.yml"
-    ansible.inventory_path = "inventory.cfg"
-    ansible.extra_vars     = {
-      ingress_loadbalancer_ip: "192.168.56.95"
-    }
-  end
+  # # FINALIZE (MetalLB, Ingress, Dashboard)
+  # config.vm.provision "ansible_finalize", type: "ansible" do |ansible|
+  #   ansible.playbook       = "playbooks/finalization.yml"
+  #   ansible.inventory_path = "inventory.cfg"
+  #   ansible.extra_vars     = {
+  #     ingress_loadbalancer_ip: "192.168.56.95"
+  #   }
+  # end
 
   
 end

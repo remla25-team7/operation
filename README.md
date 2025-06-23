@@ -14,134 +14,250 @@ This repository serves as the main entry point for the **Sentiment Analysis Syst
 
 ---
 
-## Getting Started with minikube(alternate way, this is temp location in readme)
-
-# Minikube Deployment Quickstart
-
 ## Prerequisites
 
-- [ ] [Docker Desktop](https://www.docker.com/products/docker-desktop) installed and running
-- [ ] [Minikube](https://minikube.sigs.k8s.io/docs/start/) installed
-- [ ] [kubectl](https://kubernetes.io/docs/tasks/tools/) installed
-- [ ] [Helm](https://helm.sh/docs/intro/install/) installed
+- [Docker & Docker Compose](https://docs.docker.com/compose/install/)
+- [Vagrant](https://developer.hashicorp.com/vagrant/install)
+- [Ansible](https://docs.ansible.com/ansible/latest/installation_guide/index.html)
+- [Kubectl](https://kubernetes.io/docs/tasks/tools/)
+- [Helm](https://helm.sh/docs/intro/install/)
 
-## Steps
+### 🔧 Preparation
 
-1. **Start Minikube**
-
-   ```bash
-   minikube start --driver=docker
-   ```
-
-2. **Enable Ingress**
+1. **Clone the repository** and move into the root directory:
 
    ```bash
-   minikube addons enable ingress
-   minikube tunnel
+   git clone https://github.com/remla25-team7/deployment.git
+   cd deployment
    ```
 
-   _Keep the `minikube tunnel` terminal open!_
-
-3. **Add Prometheus Helm Repo and Install Monitoring Stack**
-
-   ```bash
-   helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
-   helm repo update
-   helm install prometheus prometheus-community/kube-prometheus-stack --namespace monitoring --create-namespace
-   ```
-
-4. **Create Monitoring Namespace (if not already created)**
-
-   ```bash
-   kubectl create namespace run1
-   ```
-
-
-
-5. **Deploy the App with Helm**
-
-   ```bash
-   cd helm/restaurant-sentiment
-   helm install run1 . -n run1 --create-namespace
-   ```
-
-6. **Apply Ingress and ServiceMonitor**
-
-   ```bash
-   kubectl apply -f app-ingress.yaml
-   kubectl apply -f app-service-monitor.yaml
-   ```
-
-7. **Edit `/etc/hosts` if needed**
-
-   Add this line:
-
-   ```
-   127.0.0.1 app.local
-   ```
-   Or do
-
-   kubectl port-forward -n run1 svc/sentiment-app 5001:5001
-   to access the app via `http://localhost:5001`.
-
-8. **Visit the App**
-
-   - Open [http://app.local](http://app.local) in your browser
-
----
-
-## Troubleshooting
-
-- If you rebuild Docker images, use `minikube image load my-app:latest` before redeploying.
-- Use `kubectl get pods` to check app and monitoring pod status.
-- Make sure `minikube tunnel` is running to expose LoadBalancer services.
-
-## Getting Started
-
-### Prerequisites
-
-- [Docker](https://www.docker.com/)
-- [Docker Compose](https://docs.docker.com/compose/)
-
-### Running the Application
-
-1. **Clone this repository**
-
-   ```bash
-   git clone https://github.com/remla25-team7/operation.git
-   cd operation
-   ```
-
-2. **Create the `secrets` folder** (if it doesn't exist)
+2. **Create the `secrets` folder** (if it doesn't exist):
 
    ```bash
    mkdir -p secrets
    ```
 
-3. **Define the API key for the Model Service**
+3. **Define the API key for the Model Service**:
 
    ```bash
    echo "API_KEY=your_actual_key_here" > secrets/model_credentials.txt
    ```
 
-4. **Start all services**
+---
 
-   ```bash
-   docker-compose up -d
-   ```
+## Running the App with Docker Compose
 
-## Code Structure
+### Setup
 
-| File / Directory                | Purpose                                                                                                          |
-| ------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
-| `docker-compose.yml`            | Primary Docker Compose configuration file                                                                        |
-| `.env`                          | Environment variables (ports, versions, resource limits)                                                         |
-| `secrets/`                      | Secure storage for sensitive credentials (API keys, tokens, passwords); mounted at runtime and excluded from VCS |
-| `secrets/model_credentials.txt` | Stores the API key for model authentication (excluded from VCS)                                                  |
+- `docker-compose.yml` defines two services:
+  - `app`: The **only** service exposed to the host (port `5001`)
+  - `model-service`: Internal backend service (accessible only within Docker network)
+- Environment configuration is stored in `.env`
+- Docker **secrets** are used to pass the API key to both services
+- Volumes:
+  - `model-cache`: Caches the downloaded ML model/vectorizer
+  - `app-logs`: Stores logs from the app service
+
+### To start the full application stack:
+
+```bash
+docker compose up
+```
+
+By default, this pulls the **latest released versions** of the services:
+
+```env
+APP_SERVICE=latest
+MODEL_SERVICE_VERSION=latest
+```
+
+To run a version with the **confidence score per prediction feature**, comment out the `latest` versions and **uncomment** the following in `.env`:
+
+```env
+# APP_SERVICE=v0.1.0
+# MODEL_SERVICE_VERSION=0.3.0
+```
+
+### Access the App
+
+Once running, visit:
+
+- **Frontend UI**: [http://localhost:5001/](http://localhost:5001/)
+- **Swagger UI (API Docs)**: [http://localhost:5001/apidocs/](http://localhost:5001/apidocs/)
+
+### Stopping the App
+
+To stop the app but **preserve model cache and logs**:
+
+```bash
+docker compose down
+```
+
+To stop and **fully remove all data** (including downloaded models and logs):
+
+```bash
+docker compose down --volumes
+```
 
 ---
 
-## Assignment Progress Log
+## Running the App on Kubernetes
+
+### Cluster Provisioning
+
+To provision the full Kubernetes cluster (controller + worker nodes), verify the setup, and expose the Kubernetes Dashboard:
+
+1. **Make the script executable (only needed once):**
+
+   ```bash
+   chmod +x provision-and-verify.sh
+   ```
+
+2. **Run the provisioning and verification script:**
+
+   ```bash
+   ./provision-and-verify.sh
+   ```
+
+This script will:
+
+- Bring up all Vagrant VMs (`ctrl`, `node-1`, `node-2`)
+- Run Ansible provisioning on all machines
+- Wait for all nodes to become `Ready`
+- Automatically configure your local `/etc/hosts` file so you can access the dashboard
+- Apply the `finalization.yml` playbook to install:
+  - MetalLB
+  - NGINX Ingress Controller
+  - Kubernetes Dashboard
+  - Istio
+- Verify the health of all installed components (MetalLB, Ingress, Istio, Dashboard)
+
+During execution, you will see:
+
+- Status of each Vagrant VM
+- Ansible logs for each provisioner and playbook
+- Final verification of all services
+- Success messages with further instructions
+
+### Accessing the Kubernetes Dashboard
+
+Once the script finishes:
+
+1. Visit [https://dashboard.local](https://dashboard.local) in your browser.
+2. To log in, generate a token:
+
+   ```bash
+   kubectl -n kubernetes-dashboard create token admin-user
+   ```
+
+3. Paste the token into the login screen of the dashboard.
+
+> Tip: If the browser complains about a self-signed certificate, choose to "Proceed Anyway" (HTTPS is enabled via NGINX Ingress).
+
+---
+
+### Deploying the Application with Helm
+
+#### 1. Install Prometheus Monitoring Stack
+
+To install the Prometheus kube-prometheus-stack chart from the `prometheus-community` repository, run:
+
+```bash
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+helm repo update
+helm install prometheus prometheus-community/kube-prometheus-stack --namespace monitoring --create-namespace
+```
+
+#### 2. Navigate to the Helm Chart Directory
+
+```bash
+cd helm/restaurant-sentiment
+```
+
+#### 3. Install the Application Helm Chart
+
+```bash
+helm install sentiment .
+```
+
+#### 4. Verify Deployment and Port-Forward the App Service
+
+```bash
+kubectl get pods
+kubectl get svc
+kubectl get ingress
+kubectl port-forward svc/sentiment-app 5001:5001
+```
+
+- **App-service**: [http://localhost:5001](http://localhost:5001)
+- **App-service metrics**: [http://localhost:5001/metrics](http://localhost:5001/metrics)
+
+---
+
+### Monitoring and Observability
+
+#### Access Prometheus UI
+
+```bash
+kubectl port-forward -n monitoring svc/prometheus-kube-prometheus-prometheus 9090:9090
+```
+
+- **Prometheus UI**: [http://localhost:9090](http://localhost:9090)
+
+#### Enable Email Alerts
+
+1. Edit `values.yaml` and set your email and SMTP details under `.Values.alertmanager.email`.
+2. If using Gmail with 2FA, create an [App Password](https://support.google.com/accounts/answer/185833?hl=en).
+3. Create the SMTP password secret and restart Alertmanager:
+
+   ```bash
+   kubectl create secret generic kube-prometheus-stack-alertmanager-secret --from-literal=smtpPassword='your-app-password' -n monitoring
+   kubectl delete pod alertmanager-prometheus-kube-prometheus-alertmanager -n monitoring
+   cd helm/restaurant-sentiment && helm upgrade sentiment .
+   ```
+
+#### Test Alerts
+
+Generate traffic to trigger alerts:
+
+```bash
+while true; do curl -s http://localhost:5001/ > /dev/null; done
+```
+
+#### Debugging
+
+If you update your app image or Helm chart and want to redeploy:
+
+```bash
+kubectl rollout restart deployment app
+cd helm/restaurant-sentiment
+helm upgrade sentiment .
+```
+
+---
+
+### Accessing Grafana Dashboard
+
+To start Grafana Dashboard:
+
+```bash
+kubectl port-forward svc/prometheus-grafana 3000:80 -n monitoring
+```
+
+- **Grafana Dashboard**: [http://localhost:3000](http://localhost:3000)
+- **Admin login**:
+  - Username: Admin
+  - Password: prom-operator
+
+The dashboard should be visible under the name "Restaurant Sentiment Dashboard".
+
+If a new image is pulled and you want to rerun Grafana, run:
+
+```bash
+kubectl rollout restart deployment prometheus-grafana -n monitoring
+```
+
+## Assignment Progress Log (OLD README)
 
 ### Assignment A1
 

@@ -83,7 +83,7 @@
   vars:
     ingress_namespace: ingress-nginx
     ingress_release: ingress-nginx
-    ingress_loadbalancer_ip: "{{ ingress_loadbalancer_ip }}"
+    ingress_loadbalancer_ip: "192.168.56.95"
   tasks:
     - name: Add ingress-nginx Helm repository
       shell: |
@@ -335,9 +335,3 @@
           * Kubernetes Dashboard accessible via https://dashboard.local
           * HTTPS Ingress Controller with self-signed certificates
           
-          All components are ready for production workloads.
-          
-          To access the dashboard:
-          1. Add to /etc/hosts: 192.168.56.95 dashboard.local
-          2. Run: kubectl -n kubernetes-dashboard create token admin-user
-          3. Visit: https://dashboard.local
