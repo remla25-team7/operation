@@ -1,6 +1,8 @@
-
-- hosts: all
-  become: true
+- name: General setup for all hosts
+  hosts: all
+  become: yes
+  vars:
+    num_workers: 2
   tasks:
     # Register SSH keys
     - name: Register SSH keys
@@ -63,7 +65,7 @@
     - name: Update /etc/hosts with cluster hostnames
       become: true
       template:
-        src: hosts.j2
+        src: templates/hosts.j2
         dest: /etc/hosts
 
     - name: Add Kubernetes apt GPG key
@@ -114,8 +116,6 @@
         containerd config default | tee /etc/containerd/config.toml
       args:
         creates: /etc/containerd/config.toml
-
-
 
     - name: Set SystemdCgroup = true
       become: true

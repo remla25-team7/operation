@@ -1,39 +1,51 @@
+{{- range .Values.modelService.versions }}
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "restaurant-sentiment.fullname" . }}-model
+  name: {{ include "restaurant-sentiment.fullname" $ }}-model-{{ .version }}
   labels:
-    app.kubernetes.io/name: {{ include "restaurant-sentiment.name" . }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/name: {{ include "restaurant-sentiment.name" $ }}
+    app.kubernetes.io/instance: {{ $.Release.Name }}
     app.kubernetes.io/component: model
+    app.kubernetes.io/version: {{ .version }}
 spec:
-  replicas: {{ .Values.modelService.replicas | default 1 }}
+  replicas: {{ .replicas }}
   selector:
     matchLabels:
-      app.kubernetes.io/name: {{ include "restaurant-sentiment.name" . }}
-      app.kubernetes.io/instance: {{ .Release.Name }}
+      app.kubernetes.io/name: {{ include "restaurant-sentiment.name" $ }}
+      app.kubernetes.io/instance: {{ $.Release.Name }}
       app.kubernetes.io/component: model
+      app.kubernetes.io/version: {{ .version }}
   template:
     metadata:
       labels:
-        app.kubernetes.io/name: {{ include "restaurant-sentiment.name" . }}
-        app.kubernetes.io/instance: {{ .Release.Name }}
+        app.kubernetes.io/name: {{ include "restaurant-sentiment.name" $ }}
+        app.kubernetes.io/instance: {{ $.Release.Name }}
         app.kubernetes.io/component: model
+        app.kubernetes.io/version: {{ .version }}
     spec:
       containers:
         - name: model-service
-          image: {{ .Values.modelService.image }}
-          imagePullPolicy: {{ .Values.modelService.imagePullPolicy | default "IfNotPresent" }}
+          image: {{ .image }}
+          imagePullPolicy: {{ $.Values.modelService.imagePullPolicy | default "IfNotPresent" }}
           ports:
             - name: http
-              containerPort: {{ .Values.modelService.port }}
+              containerPort: {{ $.Values.modelService.port }}
               protocol: TCP
+          env:
+            - name: MODEL_VERSION
+              value: {{ .version | quote }}
+            - name: INCLUDE_CONFIDENCE
+              value: {{ .includeConfidence | quote }}
+            - name: API_KEY
+              value: {{ $.Values.modelService.apiKey | quote }}
           envFrom:
             - configMapRef:
-                name: {{ include "restaurant-sentiment.fullname" . }}-model-env-config
+                name: {{ include "restaurant-sentiment.fullname" $ }}-model-env-config
             - secretRef:
-                name: {{ include "restaurant-sentiment.fullname" . }}-shared-secret
-                
+                name: {{ include "restaurant-sentiment.fullname" $ }}-shared-secret
+
           volumeMounts:
             - name: shared-volume
               mountPath: /vagrant/shared
@@ -42,15 +54,16 @@ spec:
               readOnly: true
           securityContext:
             allowPrivilegeEscalation: false
-            readOnlyRootFilesystem: false 
+            readOnlyRootFilesystem: false
       volumes:
         - name: shared-volume
           hostPath:
-            path: {{ .Values.sharedVolumePath }}
+            path: {{ $.Values.sharedVolumePath }}
             type: Directory
         - name: model-credentials
           secret:
-            secretName: {{ include "restaurant-sentiment.fullname" . }}-shared-secret
+            secretName: {{ include "restaurant-sentiment.fullname" $ }}-shared-secret
             items:
               - key: model_credentials
                 path: model_credentials
+{{- end }}

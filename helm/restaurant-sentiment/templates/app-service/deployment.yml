@@ -1,41 +1,50 @@
+{{- range .Values.app.versions }}
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "restaurant-sentiment.fullname" . }}-app
+  name: {{ include "restaurant-sentiment.fullname" $ }}-app-{{ .version }}
   labels:
-    app.kubernetes.io/name: {{ include "restaurant-sentiment.name" . }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/name: {{ include "restaurant-sentiment.name" $ }}
+    app.kubernetes.io/instance: {{ $.Release.Name }}
     app.kubernetes.io/component: app
+    app.kubernetes.io/version: {{ .version }}
 spec:
-  replicas: {{ .Values.app.replicas | default 1 }}
+  replicas: {{ .replicas }}
   selector:
     matchLabels:
-      app.kubernetes.io/name: {{ include "restaurant-sentiment.name" . }}
-      app.kubernetes.io/instance: {{ .Release.Name }}
+      app.kubernetes.io/name: {{ include "restaurant-sentiment.name" $ }}
+      app.kubernetes.io/instance: {{ $.Release.Name }}
       app.kubernetes.io/component: app
+      app.kubernetes.io/version: {{ .version }}
   template:
     metadata:
       labels:
-        app.kubernetes.io/name: {{ include "restaurant-sentiment.name" . }}
-        app.kubernetes.io/instance: {{ .Release.Name }}
+        app.kubernetes.io/name: {{ include "restaurant-sentiment.name" $ }}
+        app.kubernetes.io/instance: {{ $.Release.Name }}
         app.kubernetes.io/component: app
+        app.kubernetes.io/version: {{ .version }}
     spec:
       containers:
         - name: app
-          image: {{ .Values.app.image }}
-          imagePullPolicy: {{ .Values.app.imagePullPolicy | default "IfNotPresent" }}
+          image: {{ .image }}
+          imagePullPolicy: {{ $.Values.app.imagePullPolicy | default "IfNotPresent" }}
           ports:
             - name: http
-              containerPort: {{ .Values.app.port }}
+              containerPort: {{ $.Values.app.port }}
               protocol: TCP
           env:
             - name: MODEL_SERVICE_HOST
-              value: {{ .Values.modelService.host | quote }}
+              value: {{ $.Values.modelService.host | quote }}
             - name: MODEL_SERVICE_PORT
-              value: {{ .Values.modelService.port | quote }}
+              value: {{ $.Values.modelService.port | quote }}
+            - name: APP_VERSION
+              value: {{ .version | quote }}
+            - name: RESPONSE_FORMAT
+              value: {{ .responseFormat | default "text" | quote }}
           envFrom:
             - configMapRef:
-                name: {{ include "restaurant-sentiment.fullname" . }}-env-config
+                name: {{ include "restaurant-sentiment.fullname" $ }}-env-config
           volumeMounts:
             - name: shared-volume
               mountPath: /vagrant/shared
@@ -49,11 +58,12 @@ spec:
       volumes:  
         - name: shared-volume
           hostPath:
-            path: {{ .Values.sharedVolumePath }}
+            path: {{ $.Values.sharedVolumePath }}
             type: Directory
         - name: model-credentials
           secret:
-            secretName: {{ include "restaurant-sentiment.fullname" . }}-shared-secret
+            secretName: {{ include "restaurant-sentiment.fullname" $ }}-shared-secret
             items:
               - key: model_credentials
                 path: model_credentials
+{{- end }}

@@ -1,13 +1,24 @@
 app:
-  image: ghcr.io/remla25-team7/app:latest
   imagePullPolicy: Always
   port: 5001
   host: app.local
   name: sentiment-app
-  version: "latest"
-  environment: "production"
-  logLevel: "info"
-  replicas: 1
+  versions:
+    - version: v1
+      replicas: 1
+      image: ghcr.io/remla25-team7/app:v0.0.8  # Without confidence - older version
+    - version: v2
+      replicas: 1
+      image: ghcr.io/remla25-team7/app:v0.1.0  # With confidence - newer version
+  
+  # Traffic management configuration
+  traffic:
+    weights:
+      v1: 60
+      v2: 40
+    stickySession:
+      headerName: "x-user-group"
+      headerValue: "test-group"
 
   resources:
     requests:
@@ -23,17 +34,25 @@ app:
   dbPassword: "secure_db_password_2024"
   externalApiSecret: "external_api_secret_key"
 
-
 modelService:
-  image: ghcr.io/remla25-team7/model-service:latest
   imagePullPolicy: Always
   port: 5000
   host: model.local
   name: sentiment-model
-  modelVersion: "latest"
-  environment: "production"
-  logLevel: "info"
-  replicas: 1
+  versions:
+    - version: v1
+      replicas: 1
+      image: ghcr.io/remla25-team7/model-service:0.2.22  # Without confidence scores (using latest for now)
+    - version: v2
+      replicas: 1
+      image: ghcr.io/remla25-team7/model-service:0.3.0  # With confidence scores
+  
+  # Traffic management configuration
+  traffic:
+    stickySession:
+      headerName: "x-user-group"
+      headerValue: "test-group"
+
   secret:
     modelCredentials: "thisIsTheSecret="
 

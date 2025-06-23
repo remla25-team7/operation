@@ -83,7 +83,6 @@
   vars:
     ingress_namespace: ingress-nginx
     ingress_release: ingress-nginx
-    ingress_loadbalancer_ip: "{{ ingress_loadbalancer_ip }}"
   tasks:
     - name: Add ingress-nginx Helm repository
       shell: |
@@ -97,7 +96,7 @@
       shell: |
         helm upgrade --install {{ ingress_release }} ingress-nginx/ingress-nginx \
           --namespace {{ ingress_namespace }} --create-namespace \
-          --set controller.service.loadBalancerIP={{ ingress_loadbalancer_ip }} \
+          --set controller.service.loadBalancerIP={{ ingress_loadbalancer_ip | default('192.168.56.95') }} \
           --wait
       args:
         executable: /bin/bash
