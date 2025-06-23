@@ -187,6 +187,7 @@ Approved PR: https://github.com/remla25-team7/operation/pull/56 (related to A5)
 --Moegiez Bhatti --
 Created PR: https://github.com/remla25-team7/operation/pull/54 (a5)
 Created PR: https://github.com/remla25-team7/model-training/pull/14 (related to A4)
+Approved PR: https://github.com/remla25-team7/operation/pull/55 (related to a5)
 
 -- Razvan Loghin --
 Created PR: https://github.com/remla25-team7/operation/pull/51 (related to A2) \
