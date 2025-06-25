@@ -14,11 +14,8 @@ app:
   # Traffic management configuration
   traffic:
     weights:
-      v1: 60
-      v2: 40
-    stickySession:
-      headerName: "x-user-group"
-      headerValue: "test-group"
+      v1: 60  # 60% of traffic to v1
+      v2: 40  # 40% of traffic to v2
 
   resources:
     requests:
@@ -47,12 +44,6 @@ modelService:
       replicas: 1
       image: ghcr.io/remla25-team7/model-service:0.3.0  # With confidence scores
   
-  # Traffic management configuration
-  traffic:
-    stickySession:
-      headerName: "x-user-group"
-      headerValue: "test-group"
-
   secret:
     modelCredentials: "thisIsTheSecret="
 

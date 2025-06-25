@@ -9,6 +9,7 @@ metadata:
     app.kubernetes.io/instance: {{ $.Release.Name }}
     app.kubernetes.io/component: model
     app.kubernetes.io/version: {{ .version }}
+    version: {{ .version }}
 spec:
   replicas: {{ .replicas }}
   selector:
@@ -17,6 +18,7 @@ spec:
       app.kubernetes.io/instance: {{ $.Release.Name }}
       app.kubernetes.io/component: model
       app.kubernetes.io/version: {{ .version }}
+      version: {{ .version }}
   template:
     metadata:
       labels:
@@ -24,6 +26,7 @@ spec:
         app.kubernetes.io/instance: {{ $.Release.Name }}
         app.kubernetes.io/component: model
         app.kubernetes.io/version: {{ .version }}
+        version: {{ .version }}
     spec:
       containers:
         - name: model-service
@@ -45,7 +48,6 @@ spec:
                 name: {{ include "restaurant-sentiment.fullname" $ }}-model-env-config
             - secretRef:
                 name: {{ include "restaurant-sentiment.fullname" $ }}-shared-secret
-
           volumeMounts:
             - name: shared-volume
               mountPath: /vagrant/shared

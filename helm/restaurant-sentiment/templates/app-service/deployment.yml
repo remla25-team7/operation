@@ -9,6 +9,7 @@ metadata:
     app.kubernetes.io/instance: {{ $.Release.Name }}
     app.kubernetes.io/component: app
     app.kubernetes.io/version: {{ .version }}
+    version: {{ .version }}
 spec:
   replicas: {{ .replicas }}
   selector:
@@ -17,6 +18,7 @@ spec:
       app.kubernetes.io/instance: {{ $.Release.Name }}
       app.kubernetes.io/component: app
       app.kubernetes.io/version: {{ .version }}
+      version: {{ .version }}
   template:
     metadata:
       labels:
@@ -24,6 +26,7 @@ spec:
         app.kubernetes.io/instance: {{ $.Release.Name }}
         app.kubernetes.io/component: app
         app.kubernetes.io/version: {{ .version }}
+        version: {{ .version }}
     spec:
       containers:
         - name: app
@@ -54,7 +57,6 @@ spec:
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: false 
-          
       volumes:  
         - name: shared-volume
           hostPath:
