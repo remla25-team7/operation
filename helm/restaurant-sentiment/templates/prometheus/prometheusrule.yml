@@ -1,16 +1,20 @@
+{{- if .Values.monitoring.enabled }}
+---
 apiVersion: monitoring.coreos.com/v1
 kind: PrometheusRule
 metadata:
-  name: {{ .Release.Name }}-alerts
-  namespace: {{ .Values.prometheus.namespace | default "monitoring" }}
+  name: restaurant-sentiment-app-alerts
+  labels:
+    release: prometheus
 spec:
   groups:
   - name: app.rules
     rules:
     - alert: HighRequestRate
-      expr: rate(sentiment_app_requests_total[1m]) > 15
-      for: 2m
+      expr: rate(sentiment_app_requests_total[1m]) > 0.1
+
       labels:
         severity: warning
       annotations:
         summary: "High request rate detected"
+{{- end }} 
