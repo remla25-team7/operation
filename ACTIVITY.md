@@ -219,8 +219,8 @@ Approved Pr: https://github.com/remla25-team7/operation/pull/62 \
 Approved Pr: https://github.com/remla25-team7/lib-ml/pull/5 \ 
 Approved Pr: https://github.com/remla25-team7/operation/pull/65
 Created Pr: https://github.com/remla25-team7/operation/pull/66
-Created Pr: https://github.com/remla25-team7/operation/pull/68
-
+Created Pr: https://github.com/remla25-team7/operation/pull/68 (a5)
+created pr: https://github.com/remla25-team7/model-training/pull/18 (a4)
 
 
 -- Seyidali Bulut --
