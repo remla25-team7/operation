@@ -232,7 +232,7 @@ During provisioning, the exposed IP address from the NGINX Ingress was automatic
 You can now access:
 
 - App: [http://app.local](http://app.local)
-- Model API: [http://model.local/predict](http://model.local/predict)
+- Model API: [http://model.local/predict](http://model.local/predict) (Only accesible internally by app)
 - Prometheus: [http://prometheus.local](http://prometheus.local)
 - Grafana: [http://grafana.local](http://grafana.local)
 
