@@ -1,106 +1,105 @@
 ## Deployment Documentation
 
-This document provides a detailed overview of the deployment structure and data flow for the Restaurant Sentiment Analysis system on a Kubernetes cluster using Istio as the service mesh. It is designed to make the resource relationships, traffic routing decisions, and system architecture clear and accessible for team members.
+This document provides a detailed overview of the deployment structure and data flow for the Restaurant Sentiment Analysis system deployed on a Kubernetes cluster using **Istio** as the service mesh. It is intended to clearly explain resource relationships, traffic routing, and the overall system architecture.
 
 ---
 
 ### 1. Deployment Structure
 
-The system consists of several deployed components, each serving a specific function:
+The system is composed of modular services, each serving a specific role in the application pipeline:
 
 #### Core Components
 
 * **App Image**
 
-  * **[app-frontend](https://github.com/remla25-team7/app)**: A React-based web interface exposed externally via Istio Gateway.
-  * **[app-service](https://github.com/remla25-team7/app)**: A Node.js service that receives requests from the frontend and communicates with the model-service. It uses [`lib-version`](https://github.com/remla25-team7/lib-version) to expose version metadata.
+  * **[app-service](https://github.com/remla25-team7/app)**: A Flask-based web application that serves both as a frontend and backend API. It interacts with the user and forwards user-submitted input to the model-service. It also imports [`lib-version`](https://github.com/remla25-team7/lib-version) to expose versioning metadata via API.
 
 * **Model Image**
 
-  * **[model-service](https://github.com/remla25-team7/model-service)**: A Flask REST API that loads a trained sentiment model and exposes prediction functionality. It depends on [`lib-ml`](https://github.com/remla25-team7/lib-ml) for preprocessing and model utilities.
+  * **[model-service](https://github.com/remla25-team7/model-service)**: A Flask REST service that loads a trained sentiment classification model. It relies on [`lib-ml`](https://github.com/remla25-team7/lib-ml) for text preprocessing and prediction utilities.
 
 * **Model Training**
 
-  * **[model-training](https://github.com/remla25-team7/model-training)**: A separate training pipeline that produces the model consumed by the `model-service`. This is not deployed to Kubernetes but runs during the CI/CD pipeline.
+  * **[model-training](https://github.com/remla25-team7/model-training)**: A standalone pipeline that trains and evaluates the ML model. This pipeline is triggered via GitHub Actions and stores the resulting model artifact in a public location, accessible to the model-service at runtime.
 
 * **Deployment & Operations**
 
-  * **[operation](https://github.com/remla25-team7/operation)**: Coordinates deployment automation and provisioning using Vagrant, Ansible, Helm, and Kubernetes manifests.
+  * **[operation](https://github.com/remla25-team7/operation)**: Contains all Kubernetes manifests, Helm charts, Docker Compose files, and documentation related to provisioning, deployment, and monitoring.
+
+---
 
 #### Infrastructure and Observability
 
-* **Istio Gateway**: Routes external traffic into the mesh.
-* **VirtualService**: Configures routing rules including canary rollout (e.g., 90% to v1, 10% to v2 of the backend or model).
-* **DestinationRule**: Defines stable routing targets for subsets of services.
-* **Prometheus & Grafana**: Monitor the system and visualize metrics.
-* **Kubernetes Dashboard**: Visual management of all deployed resources.
-* **MetalLB**: Assigns external IPs for LoadBalancer services in bare-metal setups.
-* **NGINX Ingress Controller** (optional): Alternative external access mechanism.
+* **Istio Gateway**: Entry point for external traffic into the mesh.
+* **VirtualService**: Routes traffic between services and handles A/B or canary testing logic (currently configured for a 60/40 traffic split).
+* **DestinationRule**: Defines routing subsets based on service versions.
+* **Prometheus & Grafana**: Used to scrape metrics from services and visualize them.
+* **Kubernetes Dashboard**: Optional GUI to inspect deployed resources.
+* **MetalLB**: Provides external IP allocation on bare-metal clusters.
+
+---
 
 #### Supporting Resources
 
-* **ConfigMaps**: Provide runtime configuration (e.g., environment mode, feature flags).
-* **Secrets**: Store API keys and sensitive environment variables.
-* **ServiceMonitor**: Configures Prometheus to scrape metrics from model and backend.
-* **HostPath Shared Volume**: Both frontend and model-service mount `/mnt/shared` for shared development storage.
-* **Helm Values Configuration**: Monitoring, hostnames, ports, and image versions can be set via `values.yaml`.
-
-#### Multi-Environment Deployment
-
-Multiple versions of the application can be deployed side by side (e.g., dev and prod) using Helm:
-
-* Each environment uses its own Ingress hostnames (`dev-app.local`, `prod-app.local`, etc.)
-* Services and configurations are isolated by Helm release name
-* Enables testing in dev before promoting to production
+* **ConfigMaps**: Used to configure runtime parameters like model URLs and app metadata.
+* **Secrets**: Used to inject sensitive credentials via environment variables.
+* **ServiceMonitor**: Prometheus CRD to detect and scrape metrics endpoints.
+* **HostPath Shared Volume**: A persistent path (`/mnt/shared`) used to share read/write files between services during development and debugging.
+* **Helm values.yaml**: Provides configurable settings for image versions, resource limits, routing behavior, and service hostnames.
 
 ---
 
-### 2. Visual Architecture Overview
+### 2. Multi-Environment Deployment
 
-![Deployment Architecture](./images/structure.png)
+The Helm setup supports multiple independent environments:
 
-The diagram above illustrates the relationships between the components and how they interact through the service mesh.
+* Separate deployments like `dev` and `prod` are distinguished via release names.
+* Custom Ingress hostnames (e.g., `dev-app.local`, `prod-app.local`) ensure separation.
+* Each deployment can run a different model or version of the app-service independently.
 
 ---
 
-### 3. Data Flow and Routing Behavior
+### 3. Visual Architecture Overview
 
-Incoming requests are handled as follows:
+![Deployment Architecture](./images/istio-service-mesh-diagram.png)
 
-1. **User Access**: The user accesses the system via a browser through the domain `app.local` (or another configured environment-specific hostname).
-2. **Istio Gateway**: Traffic is received at the `istio-ingressgateway`, which forwards the request to the frontend service based on `VirtualService` rules.
-3. **Frontend to Backend**: The frontend communicates internally with the backend service.
-4. **Backend to Model**: The backend forwards the user-submitted review to the model service.
-5. **Response Path**: The model's prediction is returned to the backend, then sent back to the frontend for user display.
-6. **Monitoring**: Prometheus scrapes metrics exposed by the backend and model using pre-defined `ServiceMonitor` resources.
+*Note: This diagram represents Istio-based routing between services through the mesh, not direct local service links.*
+
+---
+
+### 4. Data Flow and Routing Behavior
+
+The request and response path proceeds as follows:
+
+1. **User Access**: A browser sends a request to `app.local` (or `dev-app.local`, etc.).
+2. **IngressGateway**: Istio receives traffic and routes it via `VirtualService` to the app-service.
+3. **App-Service to Model-Service**: The app-service calls the model-service over internal service mesh networking.
+4. **Prediction**: The model-service processes the input and returns a prediction.
+5. **Response Propagation**: The app-service returns the prediction to the user.
+6. **Monitoring**: Prometheus gathers metrics exposed via `/metrics` endpoints on both app-service and model-service, configured using `ServiceMonitor`.
 
 #### Dynamic Routing
 
-* Traffic from the backend to the model may be split dynamically using Istio’s `VirtualService` and `DestinationRule`:
-
-  * For instance, 90% of traffic can be routed to model v1, while 10% is routed to a new candidate model (v2) during canary deployment.
-  * This setup allows A/B testing and safe rollouts based on observed performance and accuracy metrics visualized in Grafana.
+* During experiments, **Istio splits traffic** between versions (e.g., 60% to `model-v1`, 40% to `model-v2`) via `VirtualService`.
+* These rules allow controlled feature rollouts, model A/B testing, and metric-based decisions in Grafana.
 
 ---
 
-### 4. Resource Map
+### 5. Resource Overview
 
-| Component               | Type            | Namespace            | Istio-enabled | Notes                          |
-| ----------------------- | --------------- | -------------------- | ------------- | ------------------------------ |
-| sentiment-frontend      | Deployment      | sentiment            | Yes           | Exposed via Gateway            |
-| sentiment-backend       | Deployment      | sentiment            | Yes           | Internal API to model          |
-| sentiment-model-service | Deployment      | sentiment            | Yes           | Predicts sentiment             |
-| istio-ingressgateway    | Deployment      | istio-system         | N/A           | External entry point           |
-| prometheus              | StatefulSet     | monitoring           | No            | Observability backend          |
-| grafana                 | Deployment      | monitoring           | No            | Dashboards for metrics         |
-| kubernetes-dashboard    | Deployment      | kubernetes-dashboard | No            | Web UI for cluster             |
-| metallb-controller      | Deployment      | metallb-system       | No            | L2 load balancing (bare-metal) |
-| config-map/app-config   | ConfigMap       | sentiment            | N/A           | Runtime configuration          |
-| secret/api-keys         | Secret          | sentiment            | N/A           | Stored credentials             |
-| shared-volume           | HostPath Volume | sentiment            | N/A           | Shared path at /mnt/shared     |
+| Component               | Type            | Namespace            | Istio-enabled | Description                          |
+|------------------------|-----------------|----------------------|----------------|--------------------------------------|
+| app-service             | Deployment      | sentiment            | Yes           | Serves frontend and backend logic     |
+| model-service           | Deployment      | sentiment            | Yes           | Handles sentiment prediction          |
+| istio-ingressgateway    | Deployment      | istio-system         | N/A           | Entry point for external traffic      |
+| prometheus              | StatefulSet     | monitoring           | No            | Metrics scraper                       |
+| grafana                 | Deployment      | monitoring           | No            | Dashboards for observability         |
+| config-map/app-config   | ConfigMap       | sentiment            | N/A           | Runtime configuration                 |
+| secret/api-keys         | Secret          | sentiment            | N/A           | Contains credentials                  |
+| shared-volume           | HostPath Volume | sentiment            | N/A           | Shared volume mounted at `/mnt/shared` |
 
 ---
 
-### 5. Summary
+### 6. Summary
 
-This documentation provides a complete, visual, and role-specific overview of the deployed arc
+This documentation outlines the current state of the deployed system, with focus on modular components, Istio traffic management, and observability integration. It aligns with the course goals of deploying a monitored, multi-service, experiment-ready ML application.
