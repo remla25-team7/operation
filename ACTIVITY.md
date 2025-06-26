@@ -184,7 +184,7 @@ Approved PR: https://github.com/remla25-team7/model-training/pull/13 (related to
 # Week 9:
 
 --Andrea Onofrei--
-Created PR: https://github.com/remla25-team7/operation/pull/58(related to A3)
+Created PR: https://github.com/remla25-team7/operation/pull/58 (related to A3)
 Approved PR: https://github.com/remla25-team7/operation/pull/51 (related to A2)
 
 -- Seyidali Bulut --
