@@ -207,7 +207,7 @@ Approved Pr: https://github.com/remla25-team7/operation/pull/62 \
 Approved Pr: https://github.com/remla25-team7/lib-ml/pull/5 \ 
 
 -- Seyidali Bulut --
-Created PR: https://github.com/remla25-team7/operation/pull/64
-Approved PR: https://github.com/remla25-team7/model-training/pull/16
+Created PR: https://github.com/remla25-team7/operation/pull/64 (related to A5) \
+Approved PR: https://github.com/remla25-team7/model-training/pull/16 (related to A4)\
 
 
