@@ -127,7 +127,14 @@
         istio_url: "https://github.com/istio/istio/releases/download/1.25.2/istio-1.25.2-linux-{{ 'arm64' if system_arch.stdout == 'aarch64' else 'amd64' }}.tar.gz"
         istio_archive: "istio-1.25.2-linux-{{ 'arm64' if system_arch.stdout == 'aarch64' else 'amd64' }}.tar.gz"
 
+    - name: Remove old Istio archive if it exists
+      file:
+        path: "/home/vagrant/{{ istio_archive }}"
+        state: absent
+      become: yes
+
     - name: Download Istio 1.25.2
+      become_user: vagrant
       ansible.builtin.get_url:
         url: "{{ istio_url }}"
         dest: "/home/vagrant/{{ istio_archive }}"
@@ -145,6 +152,7 @@
         var: istio_verify.stdout_lines
 
     - name: Unpack Istio archive
+      become_user: vagrant
       ansible.builtin.unarchive:
         src: "/home/vagrant/{{ istio_archive }}"
         dest: /home/vagrant/

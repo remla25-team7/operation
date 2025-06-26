@@ -1,0 +1,36 @@
+{{- if .Values.rateLimiting.enabled }}
+apiVersion: networking.istio.io/v1alpha3
+kind: EnvoyFilter
+metadata:
+  name: {{ include "restaurant-sentiment.fullname" . }}-filter-ratelimit
+  namespace: istio-system
+spec:
+  workloadSelector:
+    labels:
+      istio: ingressgateway
+  configPatches:
+    - applyTo: HTTP_FILTER
+      match:
+        context: GATEWAY
+        listener:
+          filterChain:
+            filter:
+              name: "envoy.filters.network.http_connection_manager"
+              subFilter:
+                name: "envoy.filters.http.router"
+      patch:
+        operation: INSERT_BEFORE
+        value:
+          name: envoy.filters.http.ratelimit
+          typed_config:
+            "@type": type.googleapis.com/envoy.extensions.filters.http.ratelimit.v3.RateLimit
+            domain: {{ .Values.rateLimiting.domain }}
+            failure_mode_deny: true
+            timeout: 10s
+            rate_limit_service:
+              grpc_service:
+                envoy_grpc:
+                  cluster_name: outbound|{{ .Values.rateLimiting.servicePort }}||{{ .Values.rateLimiting.serviceName }}.{{ .Release.Namespace }}.svc.cluster.local
+                  authority: {{ .Values.rateLimiting.serviceName }}.{{ .Release.Namespace }}.svc.cluster.local
+              transport_api_version: V3
+{{- end }}

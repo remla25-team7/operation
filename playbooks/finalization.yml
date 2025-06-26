@@ -97,7 +97,7 @@
       shell: |
         helm upgrade --install {{ ingress_release }} ingress-nginx/ingress-nginx \
           --namespace {{ ingress_namespace }} --create-namespace \
-          --set controller.service.loadBalancerIP={{ ingress_loadbalancer_ip }} \
+          --set controller.service.loadBalancerIP={{ ingress_loadbalancer_ip | default('192.168.56.95') }} \
           --wait
       args:
         executable: /bin/bash
@@ -231,8 +231,6 @@
       debug:
         var: dashboard_ingress.stdout_lines
 
-      become_user: vagrant
-
     - name: Dashboard setup complete
       debug:
         msg: |
@@ -273,6 +271,26 @@
           Istio Ingress Gateway IP: {{ istio_gateway_ip.stdout }}
           
           You can now use Istio Gateway and VirtualService resources for traffic management.
+
+    - name: Install Istio Prometheus addon
+      shell: |
+        kubectl apply -f /home/vagrant/istio-1.25.2/samples/addons/prometheus.yaml
+      become_user: vagrant
+
+    - name: Install Istio Jaeger addon
+      shell: |
+        kubectl apply -f /home/vagrant/istio-1.25.2/samples/addons/jaeger.yaml
+      become_user: vagrant
+
+    - name: Install Istio Kiali addon
+      shell: |
+        kubectl apply -f /home/vagrant/istio-1.25.2/samples/addons/kiali.yaml
+      become_user: vagrant
+
+    - name: Enable Istio injection on default namespace
+      shell: |  
+        kubectl label namespace default istio-injection=enabled
+      become_user: vagrant
 
 - name: Final Verification
   hosts: ctrl

@@ -1,0 +1,16 @@
+{{- if .Values.trafficManagement.enabled }}
+apiVersion: networking.istio.io/v1beta1
+kind: Gateway
+metadata:
+  name: {{ include "restaurant-sentiment.fullname" . }}-gateway
+spec:
+  selector:
+    istio: ingressgateway # use Istio's default ingress gateway
+  servers:
+    - port:
+        number: 80
+        name: http
+        protocol: HTTP
+      hosts:
+        - "*" 
+{{- end }}

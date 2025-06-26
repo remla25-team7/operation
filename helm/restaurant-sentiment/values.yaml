@@ -1,13 +1,26 @@
 app:
-  image: ghcr.io/remla25-team7/app:latest
   imagePullPolicy: Always
   port: 5001
   host: app.local
   name: sentiment-app
-  version: "latest"
-  environment: "production"
-  logLevel: "info"
+  # Values for single version deployments
+  version: v0.1.1-pre2
+  image: ghcr.io/remla25-team7/app:v0.1.1-pre2
   replicas: 1
+
+  versions:
+    - version: v1
+      replicas: 1
+      image: ghcr.io/remla25-team7/app:v0.0.9-pre2  # Without confidence - older version
+    - version: v2
+      replicas: 1
+      image: ghcr.io/remla25-team7/app:v0.1.1-pre2  # With confidence - newer version
+  
+  # Traffic management configuration
+  traffic:
+    weights:
+      v1: 60  # 60% of traffic to v1
+      v2: 40  # 40% of traffic to v2
 
   resources:
     requests:
@@ -17,17 +30,30 @@ app:
       memory: "256Mi"
       cpu: "200m"
 
+  # Secrets configuration
+  apiKey: "restaurant_sentiment_api_key_2024"
+  modelServiceApiKey: "model_service_api_key"
+  dbPassword: "secure_db_password_2024"
+  externalApiSecret: "external_api_secret_key"
 
 modelService:
-  image: ghcr.io/remla25-team7/model-service:latest
   imagePullPolicy: Always
   port: 5000
   host: model.local
   name: sentiment-model
-  modelVersion: "latest"
-  environment: "production"
-  logLevel: "info"
+
+  version: v0.3.1-pre2
   replicas: 1
+  image: ghcr.io/remla25-team7/model-service:v0.3.1-pre2
+
+  versions:
+    - version: v1
+      replicas: 1
+      image: ghcr.io/remla25-team7/model-service:v0.2.23-pre2  # Without confidence scores (using latest for now)
+    - version: v2
+      replicas: 1
+      image: ghcr.io/remla25-team7/model-service:v0.3.1-pre2  # With confidence scores
+  
   secret:
     modelCredentials: "thisIsTheSecret="
 
@@ -78,5 +104,16 @@ alertmanager:
   smtpUsername: 'from-mail@gmail.com'
   smtpPassword: 'password'
   smtpTo: 'to-mail@gmail.com'
+
+trafficManagement:
+  enabled: false
+
+rateLimiting:
+  enabled: false
+  domain: sentiment-app
+  requestsPerMinute: 10
+  headerKey: x-user-id
+  serviceName: ratelimit
+  servicePort: 8081
 
 sharedVolumePath: /vagrant/shared

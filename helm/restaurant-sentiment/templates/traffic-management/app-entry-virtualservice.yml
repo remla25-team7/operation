@@ -1,0 +1,24 @@
+{{- if .Values.trafficManagement.enabled }}
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: {{ include "restaurant-sentiment.fullname" . }}-entry-vs
+spec:
+  gateways:
+    - {{ include "restaurant-sentiment.fullname" . }}-gateway
+  hosts:
+    - "*"
+  http:
+    - match:
+        - uri:
+            prefix: /
+      route:
+        - destination:
+            host: {{ include "restaurant-sentiment.fullname" . }}-app
+            subset: v1
+          weight: {{ .Values.app.traffic.weights.v1 }}
+        - destination:
+            host: {{ include "restaurant-sentiment.fullname" . }}-app
+            subset: v2
+          weight: {{ .Values.app.traffic.weights.v2 }}
+{{- end }}
