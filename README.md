@@ -162,6 +162,19 @@ This script will:
 
 > **During provisioning**, you may be prompted for your **sudo password** so that the script can automatically update your `/etc/hosts` with the NGINX Ingress IP and hostnames (e.g., `dashboard.local`).
 
+> ⚠️ **Warning:**  
+> In very rare and so far unexplained cases, VM creation may fail with an error like:  
+>  
+> ```
+> fatal: [ctrl]: UNREACHABLE! => {"changed": false, "msg": "Failed to connect to the host via ssh: kex_exchange_identification: read: Connection reset by peer\r\nConnection reset by 192.168.56.100 port 22", "unreachable": true}
+> ```
+>  
+> If this happens, try the following steps:
+> 1. Reinstall Vagrant.
+> 2. Restart your IDE.
+> 3. If the problem persists, open the `Vagrantfile` and comment out all instances of `ansible.inventory_path = "inventory.cfg"`.
+> 4. Run `vagrant destroy` to clean up, then re-run the provisioning script.
+
 > **After the script completes**, it will remind you to run:
 >
 > ```bash
