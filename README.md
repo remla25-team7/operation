@@ -8,11 +8,36 @@ This repository serves as the main entry point for the **Sentiment Analysis Syst
 
 * **Model Training**: [github.com/remla25-team7/model-training](https://github.com/remla25-team7/model-training)
 * **Model Service**: [github.com/remla25-team7/model-service](https://github.com/remla25-team7/model-service)
+* **Application Frontend and Service (app)**: [github.com/remla25-team7/app](https://github.com/remla25-team7/app)
 * **Library for Machine Learning (lib-ml)**: [github.com/remla25-team7/lib-ml](https://github.com/remla25-team7/lib-ml)
 * **Library for Versioning (lib-version)**: [github.com/remla25-team7/lib-version](https://github.com/remla25-team7/lib-version)
-* **Application Frontend and Service (app)**: [github.com/remla25-team7/app](https://github.com/remla25-team7/app)
 
 ---
+
+## Use Case: Restaurant Sentiment Analysis
+
+The **Restaurant Sentiment Analyzer** is a web application where users can submit a restaurant review and instantly receive a “positive” or “negative” sentiment prediction (with a confidence score when available). The frontend (`app`) sends the review to the backend (`model-service`), which uses a trained ML model for classification. Users can provide feedback on prediction accuracy, optionally submitting a corrected label to support continuous improvement and retraining.
+
+We provide two stable versions for canary testing (Assignment 5):
+
+- **Version 1:** No confidence score  
+  ![](docs/images/demo_no_confidence.png)  
+  [View latest app release](https://github.com/orgs/remla25-team7/packages/container/app/447382485?tag=v0.0.10) &nbsp;|&nbsp; [View latest model-service release](https://github.com/orgs/remla25-team7/packages/container/model-service/447403232?tag=v0.2.24)
+
+- **Version 2:** With confidence score  
+  ![](docs/images/demo_with_confidence.png)  
+  [View latest app release](https://github.com/orgs/remla25-team7/packages/container/app/447388335?tag=v0.1.2) &nbsp;|&nbsp; [View latest model-service release](https://github.com/orgs/remla25-team7/packages/container/model-service/447881281?tag=v0.3.2)
+
+---
+
+## Design Documentation
+
+You can find our deployment documentation at [`docs/deployment.md`](docs/deployment.md).
+
+Continous Experimentation document can be found at [`docs/continuous-experimentation.md`](docs/continuous-experimentation.md).
+
+The extension proposal is documented at [`docs/extension.md`](docs/extension.md).
+
 
 ## Prerequisites
 
@@ -27,8 +52,8 @@ This repository serves as the main entry point for the **Sentiment Analysis Syst
 1. **Clone the repository** and move into the root directory:
 
    ```bash
-   git clone https://github.com/remla25-team7/deployment.git
-   cd deployment
+   git clone https://github.com/remla25-team7/operation.git
+   cd operation
    ```
 
 2. **Create the `secrets` folder** (if it doesn't exist):
@@ -137,7 +162,7 @@ This script will:
 
 > **During provisioning**, you may be prompted for your **sudo password** so that the script can automatically update your `/etc/hosts` with the NGINX Ingress IP and hostnames (e.g., `dashboard.local`).
 
-> **After the script completes**, it will print:
+> **After the script completes**, it will remind you to run:
 >
 > ```bash
 > export KUBECONFIG=$(pwd)/kubeconfig
@@ -182,13 +207,9 @@ This will deploy:
 * Ingress resources pointing at `app.local` and `model.local`
 * Monitoring (Prometheus & Grafana) if enabled
 
-#### Adding Hostnames
+#### Hostname Configuration
 
-After installation, add the following entries to your `/etc/hosts` (replace `<INGRESS_IP>` with your NGINX Ingress IP):
-
-```
-<INGRESS_IP> app.local model.local prometheus.local grafana.local
-```
+During provisioning, the exposed IP address from the NGINX Ingress was automatically added to your `/etc/hosts` file. You can verify that `app.local`, `model.local`, `prometheus.local`, and `grafana.local` are all mapped to this IP address, allowing you to access the services via these hostnames.
 
 You can now access:
 
@@ -199,15 +220,38 @@ You can now access:
 
 ### Custom Values
 
-To override default images or ports:
+You can modify the values of variables stored in `helm/restaurant-sentiment/values.yaml` to customize your deployment, such as setting custom images, ports, or other configuration options.
 
 ```bash
 helm install restaurant-sentiment ./helm/restaurant-sentiment \
   --set app.image=ghcr.io/remla25-team7/app:v1.0.0 \
   --set modelService.image=ghcr.io/remla25-team7/model-service:v1.0.0
 ```
+### Automated Chart Testing
 
-<!-- space for Prometheus & Grafana operation instructions -->
+We provide a script to automatically verify the Helm chart and deployment:
+
+#### `test-helm-chart.sh`
+
+- **Location:** `helm/restaurant-sentiment/test-helm-chart.sh`
+- **What it does:**
+  - Lints the Helm chart
+  - Renders templates
+  - Installs the chart as a test release
+  - Waits for pods to become ready
+  - Runs Helm tests
+  - Verifies services, ConfigMaps, and Secrets
+  - Tests connectivity between the app and model service
+  - Cleans up all test resources after execution
+
+#### Usage
+
+```bash
+cd helm/restaurant-sentiment
+bash test-helm-chart.sh
+```
+
+If all tests pass, your Helm chart and deployment are working correctly. If any test fails, the script will print the error and exit.
 
 ---
 
@@ -229,12 +273,14 @@ This switches traffic handling from NGINX Ingress to the Istio Ingress Gateway a
 * Splits HTTP traffic 60/40 between v1 and v2 of the app
 * Routes each app version to its corresponding model-service version
 
-Traffic is exposed at [http://192.168.56.90](http://192.168.56.90) by default (adjust in `/etc/hosts`).
+Traffic is exposed at [http://192.168.56.90](http://192.168.56.90) by default. You can also link a custom domain name to this IP address by adding an entry to your `/etc/hosts` file.
 
 You can visualize the traffic flow in Kiali:
-
 ```bash
-# on the control-plane VM:
+# First, SSH into the control-plane VM:
+vagrant ssh ctrl
+
+# Then, inside the VM, run:
 istioctl dashboard kiali --address 0.0.0.0
 ```
 
@@ -296,90 +342,7 @@ kubectl logs -l app.kubernetes.io/component=app
 kubectl logs -l app.kubernetes.io/component=model
 ```
 
----
-
-
--------
-
-### Deploying the Application with Helm
-
-#### 1. Install Prometheus Monitoring Stack
-
-To install the Prometheus kube-prometheus-stack chart from the `prometheus-community` repository, run:
-
-```bash
-helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
-helm repo update
-helm install prometheus prometheus-community/kube-prometheus-stack --namespace monitoring --create-namespace --set prometheus.prometheusSpec.maximumStartupDurationSeconds=300
-```
-
-#### 2. Navigate to the Helm Chart Directory
-
-```bash
-cd helm/restaurant-sentiment
-```
-
-#### 3. Install the Application Helm Chart
-
-```bash
-helm install sentiment .
-```
-
-#### 4. Verify Deployment and Port-Forward the App Service
-
-```bash
-kubectl get pods
-kubectl get svc
-kubectl get ingress
-kubectl port-forward svc/sentiment-app 5001:5001
-```
-
-- **App-service**: [http://localhost:5001](http://localhost:5001)
-- **App-service metrics**: [http://localhost:5001/metrics](http://localhost:5001/metrics)
-
----
-
-### Monitoring and Observability
-
-#### Access Prometheus UI
-
-```bash
-kubectl port-forward -n monitoring svc/prometheus-kube-prometheus-prometheus 9090:9090
-```
-
-- **Prometheus UI**: [http://localhost:9090](http://localhost:9090)
-
-#### Enable Email Alerts
-
-1. Edit `values.yaml` and set your email and SMTP details under `.Values.alertmanager.email`.
-2. If using Gmail with 2FA, create an [App Password](https://support.google.com/accounts/answer/185833?hl=en).
-3. Create the SMTP password secret and restart Alertmanager:
-
-   ```bash
-   kubectl create secret generic kube-prometheus-stack-alertmanager-secret --from-literal=smtpPassword='your-app-password' -n monitoring
-   kubectl delete pod alertmanager-prometheus-kube-prometheus-alertmanager -n monitoring
-   cd helm/restaurant-sentiment && helm upgrade sentiment .
-   ```
-
-#### Test Alerts
-
-Generate traffic to trigger alerts:
-
-```bash
-while true; do curl -s http://localhost:5001/ > /dev/null; done
-```
-
-#### Debugging
-
-If you update your app image or Helm chart and want to redeploy:
-
-```bash
-kubectl rollout restart deployment app
-cd helm/restaurant-sentiment
-helm upgrade sentiment .
-```
-
----
+## Monitoring and Observability
 
 ### Accessing Grafana Dashboard
 
@@ -401,4 +364,15 @@ If a new image is pulled and you want to rerun Grafana, run:
 ```bash
 kubectl rollout restart deployment prometheus-grafana -n monitoring
 ```
+ ---
 
+## ML Testing
+
+For assignemnt 4, we developed a model training and deployment pipeline using DVC to ensure reproducibility. A comprehensive ML test set is used to validate model performance.  
+For more details, see the [Model Training repository](https://github.com/remla25-team7/model-training#ml-testing).
+
+---
+
+## Authors
+
+This implementation and documentation were completed collaboratively for REMLA by Team 7.
