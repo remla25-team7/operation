@@ -12,8 +12,9 @@ The system consists of several deployed components, each serving a specific func
 
 * **App Image**
 
-  * **[app-frontend](https://github.com/remla25-team7/app)**: A React-based web interface exposed externally via Istio Gateway.
-  * **[app-service](https://github.com/remla25-team7/app)**: A Node.js service that receives requests from the frontend and communicates with the model-service. It uses [`lib-version`](https://github.com/remla25-team7/lib-version) to expose version metadata.
+  * **[app-frontend](https://github.com/remla25-team7/app)**: A simple frontend web interface exposed externally via Istio Gateway.
+  
+  * **[app-service](https://github.com/remla25-team7/app)**: A Flask-based service that receives requests from the frontend and communicates with the model-service. It uses [`lib-version`](https://github.com/remla25-team7/lib-version) to expose version metadata.
 
 * **Model Image**
 
@@ -21,7 +22,7 @@ The system consists of several deployed components, each serving a specific func
 
 * **Model Training**
 
-  * **[model-training](https://github.com/remla25-team7/model-training)**: A separate training pipeline that produces the model consumed by the `model-service`. This is not deployed to Kubernetes but runs during the CI/CD pipeline.
+  * **[model-training](https://github.com/remla25-team7/model-training)**: A separate training pipeline that produces the model consumed by the `model-service`. This is not deployed to Kubernetes but runs during the **GitHub Actions CI pipeline**.
 
 * **Deployment & Operations**
 
@@ -30,7 +31,7 @@ The system consists of several deployed components, each serving a specific func
 #### Infrastructure and Observability
 
 * **Istio Gateway**: Routes external traffic into the mesh.
-* **VirtualService**: Configures routing rules including canary rollout (e.g., 90% to v1, 10% to v2 of the backend or model).
+* **VirtualService**: Configures routing rules including canary rollout (e.g., **60%** to v1, **40%** to v2 of the backend or model).
 * **DestinationRule**: Defines stable routing targets for subsets of services.
 * **Prometheus & Grafana**: Monitor the system and visualize metrics.
 * **Kubernetes Dashboard**: Visual management of all deployed resources.
@@ -59,7 +60,7 @@ Multiple versions of the application can be deployed side by side (e.g., dev and
 
 ![Deployment Architecture](./images/structure.png)
 
-The diagram above illustrates the relationships between the components and how they interact through the service mesh.
+The diagram above illustrates the relationships between the components and how they interact through the **Istio service mesh**.
 
 ---
 
@@ -78,7 +79,7 @@ Incoming requests are handled as follows:
 
 * Traffic from the backend to the model may be split dynamically using Istio’s `VirtualService` and `DestinationRule`:
 
-  * For instance, 90% of traffic can be routed to model v1, while 10% is routed to a new candidate model (v2) during canary deployment.
+  * For instance, **60%** of traffic can be routed to model v1, while **40%** is routed to a new candidate model (v2) during canary deployment.
   * This setup allows A/B testing and safe rollouts based on observed performance and accuracy metrics visualized in Grafana.
 
 ---
@@ -103,4 +104,4 @@ Incoming requests are handled as follows:
 
 ### 5. Summary
 
-This documentation provides a complete, visual, and role-specific overview of the deployed arc
+This documentation provides a complete, visual, and role-specific overview of the deployed architecture, traffic routing, observability, and the overall structure of the Restaurant Sentiment Analysis system.
