@@ -6,11 +6,11 @@ This repository serves as the main entry point for the **Sentiment Analysis Syst
 
 ### Related Repositories
 
-* **Model Training**: [github.com/remla25-team7/model-training](https://github.com/remla25-team7/model-training)
-* **Model Service**: [github.com/remla25-team7/model-service](https://github.com/remla25-team7/model-service)
-* **Application Frontend and Service (app)**: [github.com/remla25-team7/app](https://github.com/remla25-team7/app)
-* **Library for Machine Learning (lib-ml)**: [github.com/remla25-team7/lib-ml](https://github.com/remla25-team7/lib-ml)
-* **Library for Versioning (lib-version)**: [github.com/remla25-team7/lib-version](https://github.com/remla25-team7/lib-version)
+- **Model Training**: [github.com/remla25-team7/model-training](https://github.com/remla25-team7/model-training)
+- **Model Service**: [github.com/remla25-team7/model-service](https://github.com/remla25-team7/model-service)
+- **Application Frontend and Service (app)**: [github.com/remla25-team7/app](https://github.com/remla25-team7/app)
+- **Library for Machine Learning (lib-ml)**: [github.com/remla25-team7/lib-ml](https://github.com/remla25-team7/lib-ml)
+- **Library for Versioning (lib-version)**: [github.com/remla25-team7/lib-version](https://github.com/remla25-team7/lib-version)
 
 ---
 
@@ -38,14 +38,13 @@ Continous Experimentation document can be found at [`docs/continuous-experimenta
 
 The extension proposal is documented at [`docs/extension.md`](docs/extension.md).
 
-
 ## Prerequisites
 
-* [Docker & Docker Compose](https://docs.docker.com/compose/install/)
-* [Vagrant](https://developer.hashicorp.com/vagrant/install)
-* [Ansible](https://docs.ansible.com/ansible/latest/installation_guide/index.html)
-* [Kubectl](https://kubernetes.io/docs/tasks/tools/)
-* [Helm](https://helm.sh/docs/intro/install/)
+- [Docker & Docker Compose](https://docs.docker.com/compose/install/)
+- [Vagrant](https://developer.hashicorp.com/vagrant/install)
+- [Ansible](https://docs.ansible.com/ansible/latest/installation_guide/index.html)
+- [Kubectl](https://kubernetes.io/docs/tasks/tools/)
+- [Helm](https://helm.sh/docs/intro/install/)
 
 ### Preparation
 
@@ -74,16 +73,17 @@ The extension proposal is documented at [`docs/extension.md`](docs/extension.md)
 
 ### Setup
 
-* `docker-compose.yml` defines two services:
+- `docker-compose.yml` defines two services:
 
-  * `app`: The **only** service exposed to the host (port `5001`)
-  * `model-service`: Internal backend service (accessible only within Docker network)
-* Environment configuration is stored in `.env`
-* Docker **secrets** are used to pass the API key to both services
-* Volumes:
+  - `app`: The **only** service exposed to the host (port `5001`)
+  - `model-service`: Internal backend service (accessible only within Docker network)
 
-  * `model-cache`: Caches the downloaded ML model/vectorizer
-  * `app-logs`: Stores logs from the app service
+- Environment configuration is stored in `.env`
+- Docker **secrets** are used to pass the API key to both services
+- Volumes:
+
+  - `model-cache`: Caches the downloaded ML model/vectorizer
+  - `app-logs`: Stores logs from the app service
 
 ### To start the full application stack:
 
@@ -109,8 +109,8 @@ To run a version with the **confidence score per prediction feature**, comment o
 
 Once running, visit:
 
-* **Frontend UI**: [http://localhost:5001/](http://localhost:5001/)
-* **Swagger UI (API Docs)**: [http://localhost:5001/apidocs/](http://localhost:5001/apidocs/)
+- **Frontend UI**: [http://localhost:5001/](http://localhost:5001/)
+- **Swagger UI (API Docs)**: [http://localhost:5001/apidocs/](http://localhost:5001/apidocs/)
 
 ### Stopping the App
 
@@ -148,28 +148,30 @@ To provision the full Kubernetes cluster (controller + worker nodes), verify the
 
 This script will:
 
-* Bring up all Vagrant VMs (`ctrl`, `node-1`, `node-2`)
-* Run Ansible provisioning on all machines
-* Wait for all nodes to become `Ready`
-* Automatically configure your local `/etc/hosts` file so you can access the dashboard
-* Apply the `finalization.yml` playbook to install:
+- Bring up all Vagrant VMs (`ctrl`, `node-1`, `node-2`)
+- Run Ansible provisioning on all machines
+- Wait for all nodes to become `Ready`
+- Automatically configure your local `/etc/hosts` file so you can access the dashboard
+- Apply the `finalization.yml` playbook to install:
 
-  * MetalLB
-  * NGINX Ingress Controller
-  * Kubernetes Dashboard
-  * Istio
-* Verify the health of all installed components (MetalLB, Ingress, Istio, Dashboard)
+  - MetalLB
+  - NGINX Ingress Controller
+  - Kubernetes Dashboard
+  - Istio
+
+- Verify the health of all installed components (MetalLB, Ingress, Istio, Dashboard)
 
 > **During provisioning**, you may be prompted for your **sudo password** so that the script can automatically update your `/etc/hosts` with the NGINX Ingress IP and hostnames (e.g., `dashboard.local`).
 
 > ⚠️ **Warning:**  
-> In very rare and so far unexplained cases, VM creation may fail with an error like:  
->  
+> In very rare and so far unexplained cases, VM creation may fail with an error like:
+>
 > ```
 > fatal: [ctrl]: UNREACHABLE! => {"changed": false, "msg": "Failed to connect to the host via ssh: kex_exchange_identification: read: Connection reset by peer\r\nConnection reset by 192.168.56.100 port 22", "unreachable": true}
 > ```
->  
+>
 > If this happens, try the following steps:
+>
 > 1. Reinstall Vagrant.
 > 2. Restart your IDE.
 > 3. If the problem persists, open the `Vagrantfile` and comment out all instances of `ansible.inventory_path = "inventory.cfg"`.
@@ -210,15 +212,18 @@ We provide a Helm chart in `helm/restaurant-sentiment` for deploying the applica
 By default, the chart uses the NGINX Ingress Controller for external traffic:
 
 ```bash
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+helm repo update
+helm install prometheus prometheus-community/kube-prometheus-stack --namespace monitoring --create-namespace
 helm install restaurant-sentiment ./helm/restaurant-sentiment
 ```
 
 This will deploy:
 
-* App and Model Service
-* ClusterIP Services
-* Ingress resources pointing at `app.local` and `model.local`
-* Monitoring (Prometheus & Grafana) if enabled
+- App and Model Service
+- ClusterIP Services
+- Ingress resources pointing at `app.local` and `model.local`
+- Monitoring (Prometheus & Grafana) if enabled
 
 #### Hostname Configuration
 
@@ -226,10 +231,10 @@ During provisioning, the exposed IP address from the NGINX Ingress was automatic
 
 You can now access:
 
-* App: [http://app.local](http://app.local)
-* Model API: [http://model.local/predict](http://model.local/predict)
-* Prometheus: [http://prometheus.local](http://prometheus.local)
-* Grafana: [http://grafana.local](http://grafana.local)
+- App: [http://app.local](http://app.local)
+- Model API: [http://model.local/predict](http://model.local/predict)
+- Prometheus: [http://prometheus.local](http://prometheus.local)
+- Grafana: [http://grafana.local](http://grafana.local)
 
 ### Custom Values
 
@@ -240,6 +245,7 @@ helm install restaurant-sentiment ./helm/restaurant-sentiment \
   --set app.image=ghcr.io/remla25-team7/app:v1.0.0 \
   --set modelService.image=ghcr.io/remla25-team7/model-service:v1.0.0
 ```
+
 ### Automated Chart Testing
 
 We provide a script to automatically verify the Helm chart and deployment:
@@ -281,14 +287,15 @@ helm upgrade restaurant-sentiment ./helm/restaurant-sentiment \
 
 This switches traffic handling from NGINX Ingress to the Istio Ingress Gateway and:
 
-* Deploys two app Deployments (v1 & v2) and two model-service Deployments (v1 & v2)
-* Creates Istio `Gateway`, `DestinationRule`, and `VirtualService` resources
-* Splits HTTP traffic 60/40 between v1 and v2 of the app
-* Routes each app version to its corresponding model-service version
+- Deploys two app Deployments (v1 & v2) and two model-service Deployments (v1 & v2)
+- Creates Istio `Gateway`, `DestinationRule`, and `VirtualService` resources
+- Splits HTTP traffic 60/40 between v1 and v2 of the app
+- Routes each app version to its corresponding model-service version
 
 Traffic is exposed at [http://192.168.56.90](http://192.168.56.90) by default. You can also link a custom domain name to this IP address by adding an entry to your `/etc/hosts` file.
 
 You can visualize the traffic flow in Kiali:
+
 ```bash
 # First, SSH into the control-plane VM:
 vagrant ssh ctrl
@@ -312,9 +319,9 @@ helm upgrade restaurant-sentiment ./helm/restaurant-sentiment \
 
 This adds:
 
-* A global Envoy rate-limit filter at the Istio Ingress Gateway
-* A reference rate-limit service (gRPC + Redis)
-* A ConfigMap (`ratelimit-config`) defining the `X-USER-ID` descriptor
+- A global Envoy rate-limit filter at the Istio Ingress Gateway
+- A reference rate-limit service (gRPC + Redis)
+- A ConfigMap (`ratelimit-config`) defining the `X-USER-ID` descriptor
 
 #### Testing Rate Limits
 
@@ -332,8 +339,8 @@ for i in {1..15}; do \
   done
 ```
 
-* **200** for the first 10 requests
-* **429** for requests 11–15
+- **200** for the first 10 requests
+- **429** for requests 11–15
 
 This ensures individual users can’t overload the service.
 
@@ -357,6 +364,24 @@ kubectl logs -l app.kubernetes.io/component=model
 
 ## Monitoring and Observability
 
+To visit Prometheus Dashboard, aceess:
+
+- **Prometheus Dashboard**: [http://prometheus.local](http://grafana.local)
+
+#### Enable Email Alerts
+
+1. Edit `values.yaml` and set your email credentials details under `.Values.alertmanager`.
+2. If using Gmail with 2FA, create an [App Password](https://support.google.com/accounts/answer/185833?hl=en).
+3. Create the SMTP password secret and restart Alertmanager:
+
+   ```bash
+   cd helm/restaurant-sentiment && helm upgrade sentiment .
+   ```
+
+#### Test Alerts
+
+Manually refresh app.local for one minute by repeatedly clicking the refresh button. The alert will fire in prometheus.local, and an email will be sent.
+
 ### Accessing Grafana Dashboard
 
 - **Grafana Dashboard**: [http://grafana.local](http://grafana.local)
@@ -365,13 +390,14 @@ kubectl logs -l app.kubernetes.io/component=model
   - Password: prom-operator
 
 The dashboard should be visible under the name "Restaurant Sentiment Dashboard".
-
+Most probably, when you will you open the dashboard NODATA will be displayed. If that is the case, click on timestamps and click "Last 5 minutes".
 If a new image is pulled and you want to rerun Grafana, run:
 
 ```bash
 kubectl rollout restart deployment prometheus-grafana -n monitoring
 ```
- ---
+
+---
 
 ## ML Testing
 
