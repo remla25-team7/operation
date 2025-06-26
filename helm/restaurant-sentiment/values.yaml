@@ -76,6 +76,14 @@ prometheus:
   ingress:
     enabled: true
     host: prometheus.local
+  prometheusSpec:
+    enableAdminAPI: true
+    ruleSelector:
+      matchLabels:
+        role: alert-rules
+    ruleNamespaceSelector:
+      matchNames:
+        - monitoring 
 
 grafana:
   ingress:
