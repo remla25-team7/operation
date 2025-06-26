@@ -458,128 +458,163 @@ Related Repositories
 	•	Application Frontend and Service (app): github.com/remla25-team7/app
 	•	Deployment Infrastructure: (this repository)
 
-⸻
+---
 
-New Features (Assignment A4)
+## New Features (Assignment A4)
 
-Code Quality and Code Smell Analysis
+### **Code Quality and Code Smell Analysis**
 
-We integrated the CodeScene code analysis tool via GitHub Actions to detect code smells and hotspots. The workflow checks each PR against complexity metrics, prioritizes refactoring needs, and comments inline on risky code regions.
+We integrated the **CodeScene** code analysis tool via GitHub Actions to detect code smells and hotspots. The workflow checks each PR against complexity metrics, prioritizes refactoring needs, and comments inline on risky code regions.
 
 To run CodeScene manually:
-	1.	Commit and push code to any branch.
-	2.	Open a PR to main.
-	3.	GitHub will annotate the PR with insights from CodeScene.
 
-Pre-release Testing Workflow
+1. **Commit and push code to any branch.**
+2. **Open a PR to main.**
+3. **GitHub will annotate the PR with insights from CodeScene.**
 
-The model-training repo now includes a GitHub Actions workflow (.github/workflows/pre-release.yml) that:
-	•	Downloads data using DVC
-	•	Runs unit tests
-	•	Validates pipeline consistency
-	•	Can be triggered on PRs or tags
+---
 
-Configuration Management
-	•	params.yaml and dvc.yaml define pipeline stages and model configuration.
-	•	Supports reproducibility through DVC versioning.
-	•	src/download_data.py allows scripted data fetching during CI/CD.
+### **Pre-release Testing Workflow**
 
-Code Smell Fixes
+The **model-training** repo now includes a GitHub Actions workflow (`.github/workflows/pre-release.yml`) that:
+
+- Downloads data using DVC  
+- Runs unit tests  
+- Validates pipeline consistency  
+- Can be triggered on PRs or tags
+
+---
+
+### **Configuration Management**
+
+- `params.yaml` and `dvc.yaml` define pipeline stages and model configuration  
+- Supports reproducibility through DVC versioning  
+- `src/download_data.py` allows scripted data fetching during CI/CD
+
+---
+
+### **Code Smell Fixes**
 
 Based on CodeScene feedback:
-	•	Reduced function complexity in train_model.py and evaluate.py
-	•	Refactored large blocks into smaller units with clear responsibilities
 
-⸻
+- Reduced function complexity in `train_model.py` and `evaluate.py`  
+- Refactored large blocks into smaller units with clear responsibilities
 
-Running the App with Docker Compose
+---
 
-Setup
+## Running the App with Docker Compose
 
+### **Setup**
+
+```bash
 docker compose up
+```
 
-By default, this pulls the latest released versions:
+By default, this pulls the **latest released versions**:
 
+```env
 APP_SERVICE=latest
 MODEL_SERVICE_VERSION=latest
+```
 
-To run a version with the confidence score feature, update .env:
+To run a version with the **confidence score feature**, update `.env`:
 
+```env
 # APP_SERVICE=v0.1.0
 # MODEL_SERVICE_VERSION=0.3.0
+```
 
-Access the App
-	•	http://localhost:5001/ (Frontend)
-	•	http://localhost:5001/apidocs/ (Swagger UI)
+---
 
-Shut Down
+### **Access the App**
 
+- [http://localhost:5001/](http://localhost:5001/) (Frontend)  
+- [http://localhost:5001/apidocs/](http://localhost:5001/apidocs/) (Swagger UI)
+
+---
+
+### **Shut Down**
+
+```bash
 docker compose down
+```
 
+---
 
-⸻
+## Reproducing the Training Pipeline Locally
 
-Reproducing the Training Pipeline Locally
+From the `model-training` directory:
 
-From the model-training directory:
-
+```bash
 pip install -r requirements.txt
 dvc pull
 dvc repro
+```
 
 This will run:
-	1.	Data download
-	2.	Preprocessing
-	3.	Training
-	4.	Evaluation
 
-Trained artifacts (model.pkl, vectorizer.pkl) are saved in models/.
+1. **Data download**
+2. **Preprocessing**
+3. **Training**
+4. **Evaluation**
 
-⸻
+Trained artifacts (`model.pkl`, `vectorizer.pkl`) are saved in `models/`.
 
-Testing Locally
+---
 
-Unit Tests
+## Testing Locally
 
-Run from the root of model-training:
+### **Unit Tests**
 
+Run from the root of `model-training`:
+
+```bash
 pytest
+```
 
-Manual DVC Test
+---
 
+### **Manual DVC Test**
+
+```bash
 dvc repro --force
+```
 
+---
 
-⸻
+## GitHub Actions Workflows
 
-GitHub Actions Workflows
+### **1. Pre-release Workflow (model-training)**
 
-1. Pre-release Workflow (model-training)
-	•	Trigger: push to main, PRs
-	•	Downloads data
-	•	Runs tests and pipeline
-	•	Verifies outputs
+- **Trigger**: push to `main`, PRs  
+- Downloads data  
+- Runs tests and pipeline  
+- Verifies outputs
 
-2. CodeScene Workflow
-	•	Trigger: every PR
-	•	Comments on code smells
-	•	Gatekeeper to merging if threshold is breached
+---
 
-⸻
+### **2. CodeScene Workflow**
 
-Summary
-	•	Local testing: pytest, dvc repro, Docker Compose
-	•	CI/CD: CodeScene and pre-release tests
-	•	Config Mgmt: params.yaml, dvc.yaml
-	•	Static analysis: GitHub PR integration
-	•	Deployment: Docker Compose, Kubernetes, Helm
+- **Trigger**: every PR  
+- Comments on code smells  
+- Gatekeeper to merging if threshold is breached
 
-For full usage, monitoring, and cluster deployment, refer to the original README.md in the deployment repo.
+---
 
-⸻
+## Summary
 
-Authors
+- **Local testing**: `pytest`, `dvc repro`, Docker Compose  
+- **CI/CD**: CodeScene and pre-release tests  
+- **Config Mgmt**: `params.yaml`, `dvc.yaml`  
+- **Static analysis**: GitHub PR integration  
+- **Deployment**: Docker Compose, Kubernetes, Helm
 
-This implementation and documentation were completed collaboratively for REMLA A4 by Team 7.
+For full usage, monitoring, and cluster deployment, refer to the original `README.md` in the deployment repo.
+
+---
+
+## Authors
+
+This implementation and documentation were completed collaboratively for **REMLA A4 by Team 7**.
 
 For questions, refer to each repo’s issue tracker.
