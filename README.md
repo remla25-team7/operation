@@ -346,13 +346,7 @@ kubectl logs -l app.kubernetes.io/component=model
 
 ### Accessing Grafana Dashboard
 
-To start Grafana Dashboard:
-
-```bash
-kubectl port-forward svc/prometheus-grafana 3000:80 -n monitoring
-```
-
-- **Grafana Dashboard**: [http://localhost:3000](http://localhost:3000)
+- **Grafana Dashboard**: [http://grafana.local](http://grafana.local)
 - **Admin login**:
   - Username: Admin
   - Password: prom-operator
