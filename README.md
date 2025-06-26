@@ -444,3 +444,142 @@ If a new image is pulled and you want to rerun the grafana, run these commands:
 ```bash
 kubectl rollout restart deployment prometheus-grafana -n monitoring
 ```
+Operation
+
+Overview
+
+This repository is the main entry point for the Sentiment Analysis System for Restaurant Reviews, enhanced with testing and configuration management practices in Assignment A4. It integrates code quality tools, automated workflows, and reproducible pipelines.
+
+Related Repositories
+	•	Model Training: github.com/remla25-team7/model-training
+	•	Model Service: github.com/remla25-team7/model-service
+	•	Library for Machine Learning (lib-ml): github.com/remla25-team7/lib-ml
+	•	Library for Versioning (lib-version): github.com/remla25-team7/lib-version
+	•	Application Frontend and Service (app): github.com/remla25-team7/app
+	•	Deployment Infrastructure: (this repository)
+
+⸻
+
+New Features (Assignment A4)
+
+Code Quality and Code Smell Analysis
+
+We integrated the CodeScene code analysis tool via GitHub Actions to detect code smells and hotspots. The workflow checks each PR against complexity metrics, prioritizes refactoring needs, and comments inline on risky code regions.
+
+To run CodeScene manually:
+	1.	Commit and push code to any branch.
+	2.	Open a PR to main.
+	3.	GitHub will annotate the PR with insights from CodeScene.
+
+Pre-release Testing Workflow
+
+The model-training repo now includes a GitHub Actions workflow (.github/workflows/pre-release.yml) that:
+	•	Downloads data using DVC
+	•	Runs unit tests
+	•	Validates pipeline consistency
+	•	Can be triggered on PRs or tags
+
+Configuration Management
+	•	params.yaml and dvc.yaml define pipeline stages and model configuration.
+	•	Supports reproducibility through DVC versioning.
+	•	src/download_data.py allows scripted data fetching during CI/CD.
+
+Code Smell Fixes
+
+Based on CodeScene feedback:
+	•	Reduced function complexity in train_model.py and evaluate.py
+	•	Refactored large blocks into smaller units with clear responsibilities
+
+⸻
+
+Running the App with Docker Compose
+
+Setup
+
+docker compose up
+
+By default, this pulls the latest released versions:
+
+APP_SERVICE=latest
+MODEL_SERVICE_VERSION=latest
+
+To run a version with the confidence score feature, update .env:
+
+# APP_SERVICE=v0.1.0
+# MODEL_SERVICE_VERSION=0.3.0
+
+Access the App
+	•	http://localhost:5001/ (Frontend)
+	•	http://localhost:5001/apidocs/ (Swagger UI)
+
+Shut Down
+
+docker compose down
+
+
+⸻
+
+Reproducing the Training Pipeline Locally
+
+From the model-training directory:
+
+pip install -r requirements.txt
+dvc pull
+dvc repro
+
+This will run:
+	1.	Data download
+	2.	Preprocessing
+	3.	Training
+	4.	Evaluation
+
+Trained artifacts (model.pkl, vectorizer.pkl) are saved in models/.
+
+⸻
+
+Testing Locally
+
+Unit Tests
+
+Run from the root of model-training:
+
+pytest
+
+Manual DVC Test
+
+dvc repro --force
+
+
+⸻
+
+GitHub Actions Workflows
+
+1. Pre-release Workflow (model-training)
+	•	Trigger: push to main, PRs
+	•	Downloads data
+	•	Runs tests and pipeline
+	•	Verifies outputs
+
+2. CodeScene Workflow
+	•	Trigger: every PR
+	•	Comments on code smells
+	•	Gatekeeper to merging if threshold is breached
+
+⸻
+
+Summary
+	•	Local testing: pytest, dvc repro, Docker Compose
+	•	CI/CD: CodeScene and pre-release tests
+	•	Config Mgmt: params.yaml, dvc.yaml
+	•	Static analysis: GitHub PR integration
+	•	Deployment: Docker Compose, Kubernetes, Helm
+
+For full usage, monitoring, and cluster deployment, refer to the original README.md in the deployment repo.
+
+⸻
+
+Authors
+
+This implementation and documentation were completed collaboratively for REMLA A4 by Team 7.
+
+For questions, refer to each repo’s issue tracker.
