@@ -346,13 +346,13 @@ This ensures individual users can’t overload the service.
 
 ---
 
-# Uninstallation
+### Uninstallation
 
 ```bash
 helm uninstall restaurant-sentiment
 ```
 
-# Troubleshooting
+### Troubleshooting
 
 See logs and resources:
 
