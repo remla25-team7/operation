@@ -165,7 +165,7 @@ To install the Prometheus kube-prometheus-stack chart from the `prometheus-commu
 ```bash
 helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
 helm repo update
-helm install prometheus prometheus-community/kube-prometheus-stack --namespace monitoring --create-namespace
+helm install prometheus prometheus-community/kube-prometheus-stack --namespace monitoring --create-namespace --set prometheus.prometheusSpec.maximumStartupDurationSeconds=300
 ```
 
 #### 2. Navigate to the Helm Chart Directory

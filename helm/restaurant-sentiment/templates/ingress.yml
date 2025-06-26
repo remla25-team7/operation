@@ -1,3 +1,4 @@
+{{- if not .Values.trafficManagement.enabled }}
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
@@ -27,18 +28,7 @@ spec:
                 name: {{ include "restaurant-sentiment.fullname" . }}-app
                 port:
                   number: {{ .Values.app.port }}
-
-  # - host: {{ .Values.modelService.host }}
-    #   http:
-    #     paths:
-    #       - path: /
-    #         pathType: Prefix
-    #         backend:
-    #           service:
-    #             name: {{ include "restaurant-sentiment.fullname" . }}-model
-    #             port:
-    #               number: {{ .Values.modelService.port }} 
-
+{{- end }}
 --- 
 # Prometheus Ingress
 {{- if .Values.prometheus.ingress.enabled }}
