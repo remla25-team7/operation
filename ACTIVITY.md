@@ -178,7 +178,15 @@ Created PR: https://github.com/remla25-team7/operation/pull/48 (related to A1)
 Created PR: https://github.com/remla25-team7/model-service/pull/7 (related A1)
 Approved PR: https://github.com/remla25-team7/lib-version/pull/5 (related to A1)
 
+--Andrea Onofrei--
+Created PR: https://github.com/remla25-team7/operation/pull/52 (related to A2)
+Approved PR: https://github.com/remla25-team7/model-training/pull/13 (related to A1)
 # Week 9:
+
+--Andrea Onofrei--
+Created PR: https://github.com/remla25-team7/operation/pull/58(related to A3)
+Approved PR: https://github.com/remla25-team7/operation/pull/51 (related to A2)
+
 -- Seyidali Bulut --
 Created PR: https://github.com/remla25-team7/operation/pull/53 (related to A5)
 Created PR: https://github.com/remla25-team7/operation/pull/55 (related to A3)
@@ -195,6 +203,10 @@ Created PR: https://github.com/remla25-team7/app/pull/8 (related to A1) \
 Approved PR: https://github.com/remla25-team7/operation/pull/53 (related to A5)
 
 # Week 10:
+--Andrea Onofrei--
+Created PR: https://github.com/remla25-team7/operation/pull/69 (related to A5)
+Approved PR: https://github.com/remla25-team7/model-service/pull/8 (related to A1)
+
 -- Razvan Loghin --
 Created PR: https://github.com/remla25-team7/lib-ml/pull/5 (related to A1) \
 Created PR: https://github.com/remla25-team7/model-service/pull/8 (related to A1) \
