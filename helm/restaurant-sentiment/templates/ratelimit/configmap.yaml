@@ -1,0 +1,15 @@
+{{- if .Values.rateLimiting.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ratelimit-config
+  namespace: default
+data:
+  config.yaml: |
+    domain: {{ .Values.rateLimiting.domain }}
+    descriptors:
+      - key: {{ .Values.rateLimiting.headerKey | upper }}
+        rate_limit:
+          unit: minute
+          requests_per_unit: {{ .Values.rateLimiting.requestsPerMinute }}
+{{- end }}

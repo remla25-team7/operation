@@ -1,0 +1,26 @@
+{{- if .Values.rateLimiting.enabled }}
+apiVersion: networking.istio.io/v1alpha3
+kind: EnvoyFilter
+metadata:
+  name: {{ include "restaurant-sentiment.fullname" . }}-filter-ratelimit-svc
+  namespace: istio-system
+spec:
+  workloadSelector:
+    labels:
+      istio: ingressgateway
+  configPatches:
+    - applyTo: VIRTUAL_HOST
+      match:
+        context: GATEWAY
+        routeConfiguration:
+          vhost:
+            name: ""
+      patch:
+        operation: MERGE
+        value:
+          rate_limits:
+            - actions:
+              - request_headers:
+                  header_name: "{{ .Values.rateLimiting.headerKey }}"
+                  descriptor_key: "{{ .Values.rateLimiting.headerKey | upper }}"
+{{- end }}

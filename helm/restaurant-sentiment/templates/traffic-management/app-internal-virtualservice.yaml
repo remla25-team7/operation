@@ -5,17 +5,20 @@ metadata:
   name: {{ include "restaurant-sentiment.fullname" . }}-app-vs
 spec:
   hosts:
-    - "*"
-  gateways:
-    - {{ include "restaurant-sentiment.fullname" . }}-gateway
+    - {{ include "restaurant-sentiment.fullname" . }}-app
   http:
-    - route:
-        - destination:
-            host: {{ include "restaurant-sentiment.fullname" . }}-app
-            subset: v1
-          weight: {{ .Values.app.traffic.weights.v1 }}
+    - match:
+        - sourceLabels:
+            version: v2
+      route:
         - destination:
             host: {{ include "restaurant-sentiment.fullname" . }}-app
             subset: v2
-          weight: {{ .Values.app.traffic.weights.v2 }}
+    - match:
+        - sourceLabels:
+            version: v1
+      route:
+        - destination:
+            host: {{ include "restaurant-sentiment.fullname" . }}-app
+            subset: v1
 {{- end }}

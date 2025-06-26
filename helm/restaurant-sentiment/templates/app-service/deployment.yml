@@ -28,6 +28,10 @@ spec:
         app.kubernetes.io/component: app
         app.kubernetes.io/version: {{ .version }}
         version: {{ .version }}
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/path: "/metrics"
+        prometheus.io/port: "5001"
     spec:
       containers:
         - name: app
@@ -42,8 +46,8 @@ spec:
               value: {{ $.Values.modelService.host | quote }}
             - name: MODEL_SERVICE_PORT
               value: {{ $.Values.modelService.port | quote }}
-            - name: APP_VERSION
-              value: {{ .version | quote }}
+            # - name: APP_VERSION
+            #   value: {{ .version | quote }}
             - name: RESPONSE_FORMAT
               value: {{ .responseFormat | default "text" | quote }}
           envFrom:

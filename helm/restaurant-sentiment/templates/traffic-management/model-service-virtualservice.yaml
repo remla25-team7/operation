@@ -2,7 +2,7 @@
 apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
 metadata:
-  name: {{ include "restaurant-sentiment.fullname" . }}-model-service
+  name: {{ include "restaurant-sentiment.fullname" . }}-model-vs
 spec:
   hosts:
     - {{ include "restaurant-sentiment.fullname" . }}-model

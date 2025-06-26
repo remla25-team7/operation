@@ -98,10 +98,10 @@ alertmanager:
   smtpTo: 'to-mail@gmail.com'
 
 trafficManagement:
-  enabled: false
+  enabled: true
 
 rateLimiting:
-  enabled: false
+  enabled: true
   domain: sentiment-app
   requestsPerMinute: 10
   headerKey: x-user-id
