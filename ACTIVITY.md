@@ -197,7 +197,9 @@ Approved PR: https://github.com/remla25-team7/operation/pull/53 (related to A5)
 # Week 10:
 -- Razvan Loghin --
 Created PR: https://github.com/remla25-team7/lib-ml/pull/5 (related to A1) \
-Created PR: https://github.com/remla25-team7/model-service/pull/8 (related to A1)
+Created PR: https://github.com/remla25-team7/model-service/pull/8 (related to A1) \
+Created PR: https://github.com/remla25-team7/model-training/pull/16 (related to A4) \
+Approved PR: https://github.com/remla25-team7/operation/pull/64 (related to A3) 
 
 
 --Moegiez Bhatti --
